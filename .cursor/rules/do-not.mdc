@@ -1,0 +1,5 @@
+---
+alwaysApply: true
+---
+
+Do not run the backend or npm dev yourself, they are already running
