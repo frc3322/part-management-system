@@ -8,13 +8,8 @@ import { appState } from '../modules/state.js';
  * @returns {string} Base API URL
  */
 function getBaseUrl() {
-    // In development, backend is running on localhost:5000
-    // In production, this would be the same domain (no port needed)
-    const isDevelopment = globalThis.location.hostname === 'localhost' && globalThis.location.port === '3000';
-    if (isDevelopment) {
-        return 'http://localhost:5000/api';
-    }
-    // In production, assume same origin
+    // Since Flask serves both frontend and API from the same origin/port,
+    // always use relative API paths
     return '/api';
 }
 

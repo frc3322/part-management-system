@@ -1,6 +1,26 @@
 // 3D Viewer Component
 // Handles 3D model viewing functionality using Three.js
 
+import {
+    Scene,
+    Color,
+    PerspectiveCamera,
+    WebGLRenderer,
+    IcosahedronGeometry,
+    SphereGeometry,
+    CylinderGeometry,
+    BoxGeometry,
+    MeshBasicMaterial,
+    MeshLambertMaterial,
+    Mesh,
+    Group,
+    AmbientLight,
+    DirectionalLight,
+    Box3,
+    Vector3,
+} from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+
 /**
  * Initialize a basic 3D viewer in a container
  * @param {string} containerId - The ID of the container element
@@ -18,25 +38,25 @@ export function initBasic3DViewer(containerId) {
     const h = container.clientHeight;
 
     // Create scene
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x2d3748);
+    const scene = new Scene();
+    scene.background = new Color(0x2d3748);
 
     // Create camera
-    const camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 1000);
+    const camera = new PerspectiveCamera(50, w / h, 0.1, 1000);
     camera.position.z = 3;
 
     // Create renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(w, h);
     container.insertBefore(renderer.domElement, container.firstChild);
 
     // Create geometry and material
-    const geometry = new THREE.IcosahedronGeometry(1, 0);
-    const material = new THREE.MeshBasicMaterial({
+    const geometry = new IcosahedronGeometry(1, 0);
+    const material = new MeshBasicMaterial({
         color: 0x5bc0de,
         wireframe: true,
     });
-    const cube = new THREE.Mesh(geometry, material);
+    const cube = new Mesh(geometry, material);
     scene.add(cube);
 
     // Animation loop
@@ -76,15 +96,15 @@ export function initCustom3DViewer(containerId, options = {}) {
     const h = container.clientHeight;
 
     // Create scene
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x2d3748);
+    const scene = new Scene();
+    scene.background = new Color(0x2d3748);
 
     // Create camera
-    const camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 1000);
+    const camera = new PerspectiveCamera(50, w / h, 0.1, 1000);
     camera.position.z = 3;
 
     // Create renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(w, h);
     container.insertBefore(renderer.domElement, container.firstChild);
 
@@ -92,25 +112,25 @@ export function initCustom3DViewer(containerId, options = {}) {
     let geom;
     switch (geometry) {
         case "sphere":
-            geom = new THREE.SphereGeometry(1, 32, 32);
+            geom = new SphereGeometry(1, 32, 32);
             break;
         case "cylinder":
-            geom = new THREE.CylinderGeometry(1, 1, 2, 32);
+            geom = new CylinderGeometry(1, 1, 2, 32);
             break;
         case "box":
         default:
-            geom = new THREE.BoxGeometry(1, 1, 1);
+            geom = new BoxGeometry(1, 1, 1);
             break;
     }
 
     // Create material
-    const material = new THREE.MeshBasicMaterial({
+    const material = new MeshBasicMaterial({
         color: color,
         wireframe: wireframe,
     });
 
     // Create mesh
-    const mesh = new THREE.Mesh(geom, material);
+    const mesh = new Mesh(geom, material);
     scene.add(mesh);
 
     // Animation loop
@@ -138,20 +158,20 @@ export function loadGLTFModel(containerId, modelUrl) {
     const w = container.clientWidth;
     const h = container.clientHeight;
 
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x2d3748);
+    const scene = new Scene();
+    scene.background = new Color(0x2d3748);
 
-    const camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 1000);
+    const camera = new PerspectiveCamera(50, w / h, 0.1, 1000);
     camera.position.set(0, 0, 8); // Moved further back for better view
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(w, h);
 
     container.innerHTML = "";
     container.appendChild(renderer.domElement);
 
     // Create a group to hold the model for rotation
-    const modelGroup = new THREE.Group();
+    const modelGroup = new Group();
     scene.add(modelGroup);
 
     // Custom controls for rotating the model instead of moving camera
@@ -211,15 +231,15 @@ export function loadGLTFModel(containerId, modelUrl) {
     };
 
     // Bright lighting setup for better visibility
-    const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+    const ambientLight = new AmbientLight(0xffffff, 2);
     scene.add(ambientLight);
 
     // Main directional light for shading
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 6);
+    const directionalLight = new DirectionalLight(0xffffff, 6);
     directionalLight.position.set(5, 5, 5);
     scene.add(directionalLight);
 
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     
     const loadingIndicator = document.createElement("div");
     loadingIndicator.className = "absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-10";
@@ -243,7 +263,7 @@ export function loadGLTFModel(containerId, modelUrl) {
                         for (const material of child.material) {
                             if (material.isMeshBasicMaterial) {
                                 // Convert basic materials to Lambert materials for normal-based shading
-                                const newMaterial = new THREE.MeshLambertMaterial({
+                                const newMaterial = new MeshLambertMaterial({
                                     color: material.color,
                                     map: material.map,
                                     transparent: material.transparent,
@@ -257,7 +277,7 @@ export function loadGLTFModel(containerId, modelUrl) {
                     } else {
                         if (child.material.isMeshBasicMaterial) {
                             // Convert basic materials to Lambert materials for normal-based shading
-                            const newMaterial = new THREE.MeshLambertMaterial({
+                            const newMaterial = new MeshLambertMaterial({
                                 color: child.material.color,
                                 map: child.material.map,
                                 transparent: child.material.transparent,
@@ -272,9 +292,9 @@ export function loadGLTFModel(containerId, modelUrl) {
             });
 
             // Compute bounding box to center the model properly
-            const box = new THREE.Box3().setFromObject(model);
-            const center = box.getCenter(new THREE.Vector3());
-            const size = box.getSize(new THREE.Vector3());
+            const box = new Box3().setFromObject(model);
+            const center = box.getCenter(new Vector3());
+            const size = box.getSize(new Vector3());
 
             const maxDim = Math.max(size.x, size.y, size.z);
             const scale = maxDim > 0 ? 2 / maxDim : 1;
@@ -287,7 +307,7 @@ export function loadGLTFModel(containerId, modelUrl) {
             modelGroup.add(model);
 
             // Calculate the world center of the model (accounting for modelGroup position)
-            const worldCenter = new THREE.Vector3();
+            const worldCenter = new Vector3();
             modelGroup.getWorldPosition(worldCenter);
 
             // Set camera position for viewing (aligned with part center height)
