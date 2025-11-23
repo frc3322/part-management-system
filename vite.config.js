@@ -14,4 +14,33 @@ export default defineConfig({
             partialDirectory: [path.resolve(__dirname, "./src/html")],
         }),
     ],
+    build: {
+        // Enable minification with terser for smaller bundles
+        minify: 'terser',
+        terserOptions: {
+            compress: {
+                drop_console: true,
+                drop_debugger: true,
+            },
+        },
+        // Optimize chunk splitting for better caching
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    // Separate Three.js into its own chunk for better caching
+                    three: ['three'],
+                },
+                // Use content hash for better caching
+                chunkFileNames: 'assets/[name]-[hash].js',
+                entryFileNames: 'assets/[name]-[hash].js',
+                assetFileNames: 'assets/[name]-[hash].[ext]',
+            },
+        },
+        // Target modern browsers for smaller bundles
+        target: 'es2020',
+        // Disable source maps in production for smaller bundles
+        sourcemap: false,
+        // Optimize CSS
+        cssMinify: true,
+    },
 });

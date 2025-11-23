@@ -5,7 +5,8 @@
     "main": "vite.config.js",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
+        "build": "vite build --mode production",
+        "build:analyze": "vite build --mode analyze",
         "preview": "vite preview",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
@@ -22,7 +23,8 @@
     },
     "homepage": "https://github.com/frc3322/part-management-system#readme",
     "devDependencies": {
-        "vite": "^7.2.4"
+        "vite": "^7.2.4",
+        "terser": "^5.36.0"
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.1.17",
