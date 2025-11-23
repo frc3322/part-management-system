@@ -1,0 +1,33 @@
+{
+    "name": "part-management-system",
+    "version": "1.0.0",
+    "description": "",
+    "main": "vite.config.js",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/frc3322/part-management-system.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "bugs": {
+        "url": "https://github.com/frc3322/part-management-system/issues"
+    },
+    "homepage": "https://github.com/frc3322/part-management-system#readme",
+    "devDependencies": {
+        "vite": "^7.2.4"
+    },
+    "dependencies": {
+        "@tailwindcss/vite": "^4.1.17",
+        "tailwindcss": "^4.1.17",
+        "vite-plugin-handlebars": "^2.0.0",
+        "three": "^0.128.0"
+    }
+}

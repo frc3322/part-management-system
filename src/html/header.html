@@ -1,0 +1,43 @@
+<!-- Header -->
+<header class="mb-8 flex justify-between items-center neumorphic-card p-6">
+    <div class="flex items-center gap-4">
+        <div
+            class="h-12 w-12 rounded-full bg-gray-800 flex items-center justify-center text-blue-400 shadow-3d"
+        >
+            <i class="fa-solid fa-gears text-2xl"></i>
+        </div>
+        <h1
+            class="text-3xl font-bold tracking-wider text-blue-400"
+            style="text-shadow: 2px 2px 4px #1a1c24"
+        >
+            PART MANAGER
+        </h1>
+    </div>
+    <div class="flex gap-4 items-center">
+        <button
+            onclick="openSettingsModal()"
+            class="neumorphic-btn h-10 w-10 rounded-xl text-gray-400 hover:text-blue-400 flex items-center justify-center transition-colors"
+            title="Settings"
+        >
+            <i class="fa-solid fa-cog text-lg"></i>
+        </button>
+        <div class="relative hidden md:block">
+            <i
+                class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+            ></i>
+            <input
+                type="text"
+                id="global-search"
+                onkeyup="handleSearch(this.value)"
+                placeholder="Search parts..."
+                class="neumorphic-input pl-10 pr-4 py-2 rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-400 w-64 transition-all"
+            />
+        </div>
+        <button
+            onclick="openAddModal(true)"
+            class="neumorphic-btn px-6 py-2 rounded-xl text-blue-400 font-semibold"
+        >
+            <i class="fa-solid fa-plus mr-2"></i> Add Part for Review
+        </button>
+    </div>
+</header>
