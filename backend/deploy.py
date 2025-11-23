@@ -26,7 +26,9 @@ def run_command(command: str, description: str, env: dict = None) -> bool:
     print(f"   Command: {command}")
 
     try:
-        subprocess.run(command, shell=True, check=True, capture_output=True, text=True, env=env)
+        subprocess.run(
+            command, shell=True, check=True, capture_output=True, text=True, env=env
+        )
         print("   SUCCESS")
         return True
     except subprocess.CalledProcessError as e:
@@ -62,7 +64,9 @@ def run_production_multiworker(workers: int = 4, port: int = 8000) -> bool:
         env["DATABASE_URL"] = DEFAULT_DATABASE_URL
     if not env.get("SECRET_KEY"):
         import secrets
+
         env["SECRET_KEY"] = secrets.token_hex(32)
+        print(f"SECRET_KEY: {env['SECRET_KEY']}")
         print(SECRET_KEY_WARNING)
     if not env.get("FLASK_ENV"):
         env["FLASK_ENV"] = "production"
@@ -80,13 +84,17 @@ def run_production_eventlet(port: int = 8000) -> bool:
         env["DATABASE_URL"] = DEFAULT_DATABASE_URL
     if not env.get("SECRET_KEY"):
         import secrets
+
         env["SECRET_KEY"] = secrets.token_hex(32)
+        print(f"SECRET_KEY: {env['SECRET_KEY']}")
         print(SECRET_KEY_WARNING)
     if not env.get("FLASK_ENV"):
         env["FLASK_ENV"] = "production"
 
     command = f"uv run gunicorn -k eventlet -w 1 -b 0.0.0.0:{port} run_prod:app"
-    return run_command(command, "Starting production server (eventlet - Unix only)", env)
+    return run_command(
+        command, "Starting production server (eventlet - Unix only)", env
+    )
 
 
 def run_production_gevent(workers: int = 4, port: int = 8000) -> bool:
@@ -96,14 +104,18 @@ def run_production_gevent(workers: int = 4, port: int = 8000) -> bool:
         env["DATABASE_URL"] = DEFAULT_DATABASE_URL
     if not env.get("SECRET_KEY"):
         import secrets
+
         env["SECRET_KEY"] = secrets.token_hex(32)
+        print(f"SECRET_KEY: {env['SECRET_KEY']}")
         print(SECRET_KEY_WARNING)
     if not env.get("FLASK_ENV"):
         env["FLASK_ENV"] = "production"
 
     command = f"uv run gunicorn -k gevent -w {workers} -b 0.0.0.0:{port} run_prod:app"
     return run_command(
-        command, f"Starting production server (gevent, {workers} workers - Unix only)", env
+        command,
+        f"Starting production server (gevent, {workers} workers - Unix only)",
+        env,
     )
 
 
@@ -116,13 +128,17 @@ def run_production_waitress(port: int = 8000) -> bool:
     if not env.get("SECRET_KEY"):
         # Generate a random secret key for development - NOT for production!
         import secrets
+
         env["SECRET_KEY"] = secrets.token_hex(32)
+        print(f"SECRET_KEY: {env['SECRET_KEY']}")
         print(SECRET_KEY_WARNING)
     if not env.get("FLASK_ENV"):
         env["FLASK_ENV"] = "production"
 
     command = f"uv run waitress-serve --host=0.0.0.0 --port={port} run_prod:app"
-    return run_command(command, "Starting production server (Waitress - cross-platform)", env)
+    return run_command(
+        command, "Starting production server (Waitress - cross-platform)", env
+    )
 
 
 def main():
@@ -132,7 +148,14 @@ def main():
     )
     parser.add_argument(
         "mode",
-        choices=["dev", "prod-multi", "prod-waitress", "prod-eventlet", "prod-gevent", "install"],
+        choices=[
+            "dev",
+            "prod-multi",
+            "prod-waitress",
+            "prod-eventlet",
+            "prod-gevent",
+            "install",
+        ],
         help="Deployment mode",
     )
     parser.add_argument(
