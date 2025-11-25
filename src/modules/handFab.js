@@ -88,12 +88,12 @@ export function createHandFabRow(part, index) {
             part.notes || ""
         }</td>
         <td class="p-3">
-            <button onclick="globalThis.markCompleted('hand', ${index})" class="neumorphic-btn px-2 py-1 text-green-400 hover:text-green-300 mr-2" title="Mark Completed"><i class="fa-solid fa-check-circle"></i></button>
             ${
                 part.status === "Reviewed" || part.status === "Already Started"
                     ? `<button onclick="globalThis.markInProgress('hand', ${index})" class="neumorphic-btn px-2 py-1 text-blue-400 hover:text-blue-300 mr-2" title="Start Work / Claim"><i class="fa-solid fa-play"></i></button>`
                     : ""
             }
+            <button onclick="globalThis.markCompleted('hand', ${index})" class="neumorphic-btn px-2 py-1 text-green-400 hover:text-green-300 mr-2" title="Mark Completed"><i class="fa-solid fa-check-circle"></i></button>
             ${
                 part.assigned && part.assigned !== ""
                     ? `<button onclick="globalThis.unclaimPart(${index})" class="neumorphic-btn px-2 py-1 text-orange-400 hover:text-orange-300 mr-2" title="Unclaim Part"><i class="fa-solid fa-user-slash"></i></button>`
@@ -121,7 +121,7 @@ export function renderHandFab() {
         return;
     }
 
-    const filtered = filterParts(appState.parts.hand);
+    const filtered = filterParts(appState.parts.hand, appState.searchQuery);
 
     if (filtered.length === 0) {
         const row = document.createElement("tr");

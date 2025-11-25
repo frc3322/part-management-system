@@ -116,7 +116,7 @@ export function renderReview() {
 
     tbody.innerHTML = "";
 
-    const filtered = filterParts(appState.parts.review);
+    const filtered = filterParts(appState.parts.review, appState.searchQuery);
 
     if (filtered.length === 0) {
         emptyMsg.classList.remove("hidden");

@@ -78,7 +78,7 @@ export function renderCompleted() {
         return;
     }
 
-    const filtered = filterParts(appState.parts.completed);
+    const filtered = filterParts(appState.parts.completed, appState.searchQuery);
 
     if (filtered.length === 0) {
         emptyMsg.classList.remove("hidden");

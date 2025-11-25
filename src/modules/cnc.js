@@ -135,7 +135,7 @@ export function renderCNC() {
         return;
     }
 
-    const filtered = filterParts(appState.parts.cnc);
+    const filtered = filterParts(appState.parts.cnc, appState.searchQuery);
 
     if (filtered.length === 0) {
         renderEmptyState(container);

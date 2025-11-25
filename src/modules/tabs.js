@@ -2,6 +2,13 @@
 // Handles tab switching and navigation
 
 import { appState, loadAllParts, loadPartsForCategory } from "./state.js";
+import { renderReview } from "./review.js";
+import { renderCNC } from "./cnc.js";
+import { renderHandFab } from "./handFab.js";
+import { renderCompleted } from "./completed.js";
+
+// Debounce timer for search
+let searchDebounceTimer = null;
 
 /**
  * Switch to a specific tab
@@ -45,17 +52,27 @@ export async function switchTab(tab) {
 }
 
 /**
- * Handle search functionality
+ * Handle search functionality with debouncing
  * @param {string} query - The search query
  */
 export function handleSearch(query) {
     appState.searchQuery = query;
-    // Re-render current tab
-    const currentTab = getCurrentTab();
-    if (currentTab === "review") renderReview();
-    else if (currentTab === "cnc") renderCNC();
-    else if (currentTab === "hand") renderHandFab();
-    else if (currentTab === "completed") renderCompleted();
+
+    // Clear existing timer
+    if (searchDebounceTimer) {
+        clearTimeout(searchDebounceTimer);
+    }
+
+    // Set new timer to debounce search
+    searchDebounceTimer = setTimeout(() => {
+        // Re-render current tab after debounce delay
+        const currentTab = getCurrentTab();
+        if (currentTab === "review") renderReview();
+        else if (currentTab === "cnc") renderCNC();
+        else if (currentTab === "hand") renderHandFab();
+        else if (currentTab === "completed") renderCompleted();
+        searchDebounceTimer = null;
+    }, 300); // 300ms debounce delay
 }
 
 /**
