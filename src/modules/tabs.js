@@ -64,13 +64,20 @@ export function handleSearch(query) {
     }
 
     // Set new timer to debounce search
-    searchDebounceTimer = setTimeout(() => {
+    searchDebounceTimer = setTimeout(async () => {
         // Re-render current tab after debounce delay
         const currentTab = getCurrentTab();
-        if (currentTab === "review") renderReview();
-        else if (currentTab === "cnc") renderCNC();
-        else if (currentTab === "hand") renderHandFab();
-        else if (currentTab === "completed") renderCompleted();
+        
+        if (currentTab === "review") {
+            renderReview();
+        } else if (currentTab === "cnc") {
+            renderCNC();
+        } else if (currentTab === "hand") {
+            renderHandFab();
+        } else if (currentTab === "completed") {
+            renderCompleted();
+        }
+        
         searchDebounceTimer = null;
     }, 300); // 300ms debounce delay
 }
@@ -87,7 +94,7 @@ export function getCurrentTab() {
  * Sort hand fabrication table by a specific key
  * @param {string} key - The key to sort by
  */
-export function sortTable(key) {
+export async function sortTable(key) {
     appState.sortDirection = appState.sortDirection === 1 ? -1 : 1;
 
     appState.parts.hand.sort((a, b) => {

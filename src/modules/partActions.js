@@ -6,6 +6,7 @@ import { renderReview } from "./review.js";
 import { renderCNC } from "./cnc.js";
 import { renderHandFab } from "./handFab.js";
 import { renderCompleted } from "./completed.js";
+import { openAddModal, handleCategoryChange } from "./modals.js";
 import {
     approvePart as apiApprovePart,
     assignPart as apiAssignPart,
@@ -119,39 +120,35 @@ export function editPart(tab, index) {
     const part = appState.parts[tab][index];
     const type = part.type || (tab === "cnc" ? "cnc" : "hand");
 
-    import("./modals.js").then(({ openAddModal }) => {
-        openAddModal();
-        document.getElementById("modal-title").innerText = `Edit Part`;
-        document.getElementById("edit-mode").value = "true";
-        document.getElementById("edit-index").value = index;
-        document.getElementById("edit-origin-tab").value = tab;
+    openAddModal();
+    document.getElementById("modal-title").innerText = `Edit Part`;
+    document.getElementById("edit-mode").value = "true";
+    document.getElementById("edit-index").value = index;
+    document.getElementById("edit-origin-tab").value = tab;
 
-        document.getElementById("input-category").value = type;
-        document.getElementById("input-category").disabled = true;
-        import("./modals.js").then(({ handleCategoryChange }) => {
-            handleCategoryChange(type);
-        });
+    document.getElementById("input-category").value = type;
+    document.getElementById("input-category").disabled = true;
+    handleCategoryChange(type);
 
-        document.getElementById("input-name").value =
-            type === "cnc" ? part.name : part.id;
-        document.getElementById("input-status").value = part.status;
-        document
-            .getElementById("input-status")
-            .parentElement.classList.remove("hidden");
-        document.getElementById("input-notes").value = part.notes || "";
-        document.getElementById("input-onshape").value = part.onshapeUrl || "";
+    document.getElementById("input-name").value =
+        type === "cnc" ? part.name : part.id;
+    document.getElementById("input-status").value = part.status;
+    document
+        .getElementById("input-status")
+        .parentElement.classList.remove("hidden");
+    document.getElementById("input-notes").value = part.notes || "";
+    document.getElementById("input-onshape").value = part.onshapeUrl || "";
 
-        if (type === "hand") {
-            document.getElementById("input-subsystem").value =
-                part.subsystem || "";
-            document.getElementById("input-assigned").value =
-                part.assigned || "";
-            document.getElementById("file-name-display").innerText = "No file";
-        } else {
-            document.getElementById("file-name-display").innerText =
-                part.file || "No file";
-        }
-    });
+    if (type === "hand") {
+        document.getElementById("input-subsystem").value =
+            part.subsystem || "";
+        document.getElementById("input-assigned").value =
+            part.assigned || "";
+        document.getElementById("file-name-display").innerText = "No file";
+    } else {
+        document.getElementById("file-name-display").innerText =
+            part.file || "No file";
+    }
 }
 
 /**

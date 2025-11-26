@@ -2,6 +2,10 @@
 // Manages all application state and provides state-related utilities
 
 import { getParts, getStats } from '../utils/partsApi.js';
+import { renderReview } from './review.js';
+import { renderCNC } from './cnc.js';
+import { renderHandFab } from './handFab.js';
+import { renderCompleted } from './completed.js';
 
 /** @typedef {{id?: number, type?: string, name?: string, subsystem?: string, assigned?: string, status: string, notes?: string, file?: string, onshapeUrl?: string, claimedDate?: string, category?: string, createdAt?: string, updatedAt?: string}} Part */
 
@@ -40,22 +44,18 @@ export const appState = {
 async function reRenderCurrentTab() {
     switch (appState.currentTab) {
         case 'review': {
-            const { renderReview } = await import('./review.js');
             renderReview();
             break;
         }
         case 'cnc': {
-            const { renderCNC } = await import('./cnc.js');
             renderCNC();
             break;
         }
         case 'hand': {
-            const { renderHandFab } = await import('./handFab.js');
             renderHandFab();
             break;
         }
         case 'completed': {
-            const { renderCompleted } = await import('./completed.js');
             renderCompleted();
             break;
         }

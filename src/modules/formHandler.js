@@ -7,7 +7,8 @@ import { renderCNC } from "./cnc.js";
 import { renderHandFab } from "./handFab.js";
 import { renderCompleted } from "./completed.js";
 import { closeModal } from "./modals.js";
-import { createPart as apiCreatePart, updatePart as apiUpdatePart, uploadPartFile } from "../utils/partsApi.js";
+import { switchTab } from "./tabs.js";
+import { createPart as apiCreatePart, updatePart as apiUpdatePart, uploadPartFile, getPart } from "../utils/partsApi.js";
 
 /**
  * Extract form data from the part form
@@ -74,7 +75,7 @@ function prepareApiData(formData) {
 async function handleFileUpload(partId, file) {
     try {
         await uploadPartFile(partId, file);
-        const updatedPart = await import("../utils/partsApi.js").then(m => m.getPart(partId));
+        const updatedPart = await getPart(partId);
         updatePartInState(partId, updatedPart);
         return updatedPart;
     } catch (error) {
@@ -113,9 +114,7 @@ async function handleCreatePart(formData, apiData) {
     }
 
     // Switch to review tab for new parts
-    import("./tabs.js").then(({ switchTab }) => {
-        switchTab("review");
-    });
+    switchTab("review");
 }
 
 /**
