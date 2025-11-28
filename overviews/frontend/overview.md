@@ -11,24 +11,27 @@ src/
 ├── main.js                 # Application entry point and initialization
 ├── style.css              # Global styles and Tailwind configuration
 ├── components/            # Reusable UI components
-│   └── threeDViewer.js    # 3D model visualization component
+│   └── threeDViewer.js    # 3D model visualization component (future)
 ├── html/                  # HTML templates for UI sections
 │   ├── header.html        # Application header
 │   ├── tabs.html          # Navigation tabs
 │   ├── *-content.html     # Content templates for each tab
 │   └── *-modal.html       # Modal dialog templates
 ├── modules/               # Core application logic (modular architecture)
+│   ├── auth.js            # Authentication management
 │   ├── state.js           # Central state management
 │   ├── tabs.js            # Tab navigation and switching
 │   ├── partActions.js     # Part manipulation operations
 │   ├── formHandler.js     # Form submission handling
 │   ├── modals.js          # Modal management
 │   ├── review.js          # Review tab logic
-│   ├── cnc.js             # CNC machining tab logic
+│   ├── cnc.js             # CNC machining tab logic (includes STEP download)
 │   ├── handFab.js         # Hand fabrication tab logic
 │   └── completed.js       # Completed parts tab logic
-└── utils/                 # Utility functions
-    └── helpers.js         # Common helper functions
+├── utils/                 # Utility functions
+│   └── partsApi.js        # API communication utilities
+└── components/            # Specialized components
+    └── threeDViewer.js    # 3D model visualization (future implementation)
 ```
 
 ## Architecture Overview
@@ -44,10 +47,12 @@ The application follows a **modular architecture** with clear separation of conc
 
 ## Key Features
 
+- **Authentication System**: API key-based authentication with modal login
 - **Multi-tab Interface**: Review, CNC, Hand Fabrication, and Completed parts
 - **Part Lifecycle Management**: From design review through completion
+- **File Management**: STEP file upload and download capabilities
 - **Search and Filtering**: Global search across all parts
-- **3D Visualization**: Integrated Three.js components for model viewing
+- **3D Visualization**: Planned Three.js components for model viewing
 - **Responsive Design**: Modern neumorphic UI with Tailwind CSS
 - **Modal Management**: Dynamic forms and confirmation dialogs
 
@@ -55,7 +60,10 @@ The application follows a **modular architecture** with clear separation of conc
 
 - **Frontend**: Vanilla JavaScript (ES6+ modules)
 - **Styling**: Tailwind CSS with custom neumorphic design system
-- **3D Graphics**: Three.js for model visualization
+- **API Communication**: Fetch API with custom utilities
+- **Authentication**: Modal-based API key management
+- **File Handling**: Browser File API for uploads and downloads
+- **3D Graphics**: Three.js (planned for future implementation)
 - **Icons**: Font Awesome
 - **Build Tool**: Vite
 
@@ -65,6 +73,8 @@ The application follows a **modular architecture** with clear separation of conc
 - Follows Google-style docstrings for documentation
 - Implements TypeScript-style JSDoc type annotations
 - Modular design enables easy testing and maintenance
+- Authentication system integrated throughout the application
+- API communication abstracted into reusable utilities
 - No external state management libraries (vanilla JS approach)
 
 ## Related Documentation

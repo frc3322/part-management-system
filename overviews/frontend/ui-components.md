@@ -140,7 +140,52 @@ The `src/html/` directory contains modular HTML templates that form the user int
 
 ## Modal Templates
 
-### 7. add-modal.html - Add Part Modal
+### 7. auth-modal.html - Authentication Modal
+
+**Purpose**: API key authentication interface for backend access
+
+**Structure**:
+```html
+<div id="auth-modal" class="modal-overlay">
+  <div class="modal-content neumorphic-card">
+    <div class="modal-header">
+      <h2 class="text-2xl font-bold text-blue-400">Authentication Required</h2>
+      <p class="text-gray-300 mt-2">Please enter your API key to access the system.</p>
+    </div>
+    <form id="auth-form" class="modal-body">
+      <div class="form-group">
+        <label for="api-key" class="block text-sm font-medium text-gray-300 mb-2">
+          API Key
+        </label>
+        <input
+          type="password"
+          id="api-key"
+          name="api_key"
+          class="neumorphic-input w-full"
+          placeholder="Enter your API key"
+          required
+        />
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button type="submit" class="neumorphic-button flex-1">
+          Authenticate
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+```
+
+**Features**:
+- Password-type input for API key security
+- Form validation and submission handling
+- Error display for authentication failures
+- Modal overlay with backdrop dismissal disabled
+- Persistent until successful authentication
+
+---
+
+### 8. add-modal.html - Add Part Modal
 
 **Purpose**: Form for adding new parts to the system
 
@@ -173,7 +218,7 @@ The `src/html/` directory contains modular HTML templates that form the user int
 - Onshape URL integration
 - Form validation
 
-### 8. assign-modal.html - Assignment Modal
+### 9. assign-modal.html - Assignment Modal
 
 **Purpose**: Modal for assigning parts to team members
 
@@ -203,7 +248,7 @@ The `src/html/` directory contains modular HTML templates that form the user int
 - Assignment confirmation
 - Integration with part tracking
 
-### 9. unclaim-modal.html - Unclaim Modal
+### 10. unclaim-modal.html - Unclaim Modal
 
 **Purpose**: Confirmation dialog for removing part assignments
 
@@ -226,7 +271,7 @@ The `src/html/` directory contains modular HTML templates that form the user int
 - Safe unassignment process
 - Prevents accidental data loss
 
-### 10. settings-modal.html - Settings Modal
+### 11. settings-modal.html - Settings Modal
 
 **Purpose**: Application configuration and preferences
 

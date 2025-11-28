@@ -4,6 +4,222 @@
 
 The `src/utils/` directory contains shared helper functions used throughout the application. These utilities follow functional programming principles and provide common operations for data manipulation, formatting, and user interface enhancements.
 
+## API Communication Utilities (partsApi.js)
+
+### HTTP Request Abstraction
+
+**Purpose**: Centralized API communication with authentication and error handling
+
+**Core Functions**:
+
+#### `makeRequest(endpoint, options)` - Base HTTP request function
+
+```javascript
+/**
+ * Make authenticated HTTP request to API
+ * @param {string} endpoint - API endpoint path
+ * @param {object} options - Request options
+ * @returns {Promise} Response data or throws error
+ */
+export async function makeRequest(endpoint, options = {}) {
+    const defaultOptions = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-API-Key': appState.apiKey
+        }
+    };
+
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        ...defaultOptions,
+        ...options,
+        headers: { ...defaultOptions.headers, ...options.headers }
+    });
+
+    if (!response.ok) {
+        const error = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(error.error || `HTTP ${response.status}`);
+    }
+
+    return response.json();
+}
+```
+
+**Features**:
+- Automatic API key header injection
+- JSON request/response handling
+- Error parsing and throwing
+- Configurable request options
+
+#### `getParts(params)` - Fetch parts with filtering
+
+```javascript
+/**
+ * Get parts from API with optional filtering
+ * @param {object} params - Query parameters
+ * @returns {Promise} Parts data with pagination
+ */
+export async function getParts(params = {}) {
+    const queryString = new URLSearchParams(params).toString();
+    return makeRequest(`/parts/?${queryString}`);
+}
+```
+
+**Supported Parameters**:
+- `category`: Filter by workflow category
+- `search`: Global search query
+- `sort_by`: Sort field
+- `sort_order`: Sort direction
+- `limit`: Results per page
+- `offset`: Pagination offset
+
+#### `createPart(partData)` - Create new part
+
+```javascript
+export async function createPart(partData) {
+    return makeRequest('/parts/', {
+        method: 'POST',
+        body: JSON.stringify(partData)
+    });
+}
+```
+
+#### `updatePart(partId, partData)` - Update existing part
+
+```javascript
+export async function updatePart(partId, partData) {
+    return makeRequest(`/parts/${partId}`, {
+        method: 'PUT',
+        body: JSON.stringify(partData)
+    });
+}
+```
+
+#### `deletePart(partId)` - Delete part
+
+```javascript
+export async function deletePart(partId) {
+    return makeRequest(`/parts/${partId}`, {
+        method: 'DELETE'
+    });
+}
+```
+
+### Workflow Operations
+
+#### Part State Management
+
+```javascript
+export async function approvePart(partId) {
+    return makeRequest(`/parts/${partId}/approve`, { method: 'POST' });
+}
+
+export async function assignPart(partId, assignedUser) {
+    return makeRequest(`/parts/${partId}/assign`, {
+        method: 'POST',
+        body: JSON.stringify({ assigned: assignedUser })
+    });
+}
+
+export async function unclaimPart(partId) {
+    return makeRequest(`/parts/${partId}/unclaim`, { method: 'POST' });
+}
+
+export async function completePart(partId) {
+    return makeRequest(`/parts/${partId}/complete`, { method: 'POST' });
+}
+
+export async function revertPart(partId) {
+    return makeRequest(`/parts/${partId}/revert`, { method: 'POST' });
+}
+```
+
+### File Operations
+
+#### `uploadPartFile(partId, file)` - Upload STEP file
+
+```javascript
+export async function uploadPartFile(partId, file) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return makeRequest(`/parts/${partId}/upload`, {
+        method: 'POST',
+        headers: {
+            // Don't set Content-Type, let browser set it with boundary
+            'X-API-Key': appState.apiKey
+        },
+        body: formData
+    });
+}
+```
+
+#### `downloadPartFile(partId)` - Download STEP file
+
+```javascript
+export async function downloadPartFile(partId) {
+    const response = await fetch(`${API_BASE_URL}/parts/${partId}/download`, {
+        headers: { 'X-API-Key': appState.apiKey }
+    });
+
+    if (!response.ok) {
+        throw new Error('Download failed');
+    }
+
+    // Trigger browser download
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `part_${partId}.step`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+}
+```
+
+### Statistics and Health
+
+#### `getStats()` - Get system statistics
+
+```javascript
+export async function getStats() {
+    return makeRequest('/parts/stats');
+}
+```
+
+#### `checkAuth()` - Validate API key
+
+```javascript
+export async function checkAuth() {
+    try {
+        await makeRequest('/parts/auth/check');
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+```
+
+### Error Handling
+
+**Consistent Error Format**:
+```javascript
+try {
+    const parts = await getParts({ category: 'review' });
+    // Handle success
+} catch (error) {
+    console.error('API Error:', error.message);
+    // Show user-friendly error message
+}
+```
+
+**Network Error Handling**:
+- Automatic retry for transient failures (future enhancement)
+- User-friendly error messages
+- Graceful degradation
+
+---
+
 ## Core Utilities (helpers.js)
 
 ### 1. Data Filtering

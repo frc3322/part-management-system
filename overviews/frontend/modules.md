@@ -6,7 +6,39 @@ The `src/modules/` directory contains the core business logic, organized by feat
 
 ## Core Modules
 
-### 1. state.js - State Management
+### 1. auth.js - Authentication Management
+
+**Purpose**: Handle API authentication, modal management, and API key persistence
+
+**Key Functions**:
+- `initializeAuthModal()` - Sets up the authentication modal UI
+- `showAuthModal()` - Displays the authentication modal to user
+- `hideAuthModal()` - Hides the authentication modal
+- `handleAuthSubmit()` - Processes authentication form submission
+- `checkAuthentication()` - Validates current API key with backend
+- `setApiKey(key)` - Stores API key in application state and local storage
+
+**Authentication Flow**:
+```javascript
+// On app startup
+checkAuthentication() // Returns promise<boolean>
+  .then(isAuthenticated => {
+    if (isAuthenticated) {
+      initializeState(); // Load app data
+    } else {
+      showAuthModal(); // Show login form
+    }
+  });
+```
+
+**State Integration**:
+- Stores API key in `appState.apiKey`
+- Tracks authentication status in `appState.isAuthenticated`
+- Persists API key in localStorage for session continuity
+
+---
+
+### 2. state.js - State Management
 
 **Purpose**: Central state management and data persistence
 
@@ -41,12 +73,21 @@ The `src/modules/` directory contains the core business logic, organized by feat
   currentTab: "review",
   searchQuery: "",
   sortDirection: 1,
+  // Authentication state
+  apiKey: null,
+  isAuthenticated: false,
+  // Loading states
+  isLoading: false,
+  loadingTab: null,
+  // Parts data from API
   parts: {
     review: Part[],
     cnc: Part[],
     hand: Part[],
     completed: Part[]
-  }
+  },
+  // Statistics
+  stats: null
 }
 ```
 
@@ -122,14 +163,21 @@ The `src/modules/` directory contains the core business logic, organized by feat
 
 ### 7. cnc.js - CNC Machining Tab Logic
 
-**Purpose**: Manages CNC machining workflow
+**Purpose**: Manages CNC machining workflow and file operations
 
 **Key Functions**:
 - `renderCNC()` - Renders CNC tab with grid layout
+- `downloadStepFile(partId)` - Downloads STEP files from backend
 - Displays parts requiring CNC machining
 - Special grid layout for CNC-specific information
+- File download integration for CAD files
 
-**Content**: Parts designated for CNC processing
+**Content**: Parts designated for CNC processing with STEP file access
+
+**File Operations**:
+- STEP file downloads triggered from part actions
+- Browser-native download handling
+- Error handling for missing files
 
 ### 8. handFab.js - Hand Fabrication Tab Logic
 

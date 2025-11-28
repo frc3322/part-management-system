@@ -33,21 +33,35 @@ The Part Management System employs a **modular, component-based architecture** b
 ## Data Flow Architecture
 
 ```
-User Interaction → HTML Event → Module Handler → State Update → UI Re-render
+User Interaction → Authentication Check → HTML Event → API Call → State Update → UI Re-render
+       ↓                ↓                    ↓           ↓           ↓            ↓
+   Click/Input     API Key Validation    Handler    HTTP Request   Data Sync   DOM Update
 ```
 
 ### Detailed Flow:
 
-1. **User Interaction**: Click, form submission, or input change
-2. **Event Handling**: Global handlers in `main.js` route to appropriate module
-3. **Business Logic**: Module processes the action and updates state
-4. **State Update**: Centralized state management in `state.js`
-5. **UI Update**: Affected components re-render with new state
+1. **Authentication Check**: Verify API key before any backend communication
+2. **User Interaction**: Click, form submission, or input change triggers handler
+3. **Event Handling**: Global handlers in `main.js` route to appropriate module
+4. **API Communication**: Modules call backend APIs with authentication
+5. **Business Logic**: Process response and update application state
+6. **State Update**: Centralized state management in `state.js`
+7. **UI Update**: Affected components re-render with new state
+
+### Authentication Flow:
+
+```
+App Start → Check Auth → Show Auth Modal (if needed) → Validate API Key → Initialize App
+     ↓           ↓               ↓                        ↓              ↓
+DOMContent   API Call       User Input              Backend Check     Load Data
+```
 
 ## Module Dependencies
 
 ```
 main.js (entry point)
+├── auth.js (authentication)
+├── state.js (central state)
 ├── state.js (core state)
 ├── tabs.js (navigation)
 │   ├── review.js

@@ -13,12 +13,25 @@ export const appState = {
     currentTab: "review",        // Currently active tab
     searchQuery: "",            // Global search filter
     sortDirection: 1,           // Sort direction (1 = asc, -1 = desc)
+
+    // Authentication state
+    apiKey: null,               // Current API key
+    isAuthenticated: false,     // Authentication status
+
+    // Loading states
+    isLoading: false,           // Global loading indicator
+    loadingTab: null,           // Which tab is currently loading
+
+    // Parts data from API
     parts: {
         review: [],             // Parts pending review
         cnc: [],                // Parts for CNC machining
         hand: [],               // Parts for hand fabrication
         completed: []           // Completed parts
-    }
+    },
+
+    // Statistics from API
+    stats: null                 // System statistics
 };
 ```
 
@@ -27,16 +40,19 @@ export const appState = {
 ```javascript
 /**
  * @typedef {{
+ *   id?: number,             // Unique part identifier
  *   type?: string,           // Part type: "cnc" | "hand"
  *   name?: string,           // Part name
- *   id?: string,             // Unique part identifier
  *   subsystem?: string,      // System subsystem
  *   assigned?: string,       // Assigned team member
- *   status: string,          // Current status
+ *   status: string,          // Current workflow status
  *   notes?: string,          // Additional notes
  *   file?: string,           // Associated file name
  *   onshapeUrl?: string,     // Onshape URL
- *   claimedDate?: Date       // Date part was claimed
+ *   claimedDate?: string,    // Date part was claimed (ISO format)
+ *   category?: string,       // Workflow category
+ *   createdAt?: string,      // Creation timestamp (ISO format)
+ *   updatedAt?: string       // Last update timestamp (ISO format)
  * }} Part
  */
 ```
@@ -97,7 +113,7 @@ export function getCurrentTab() {
 
 ## State Initialization
 
-### Mock Data Setup
+### API Data Loading
 
 ```javascript
 export function initializeState() {
