@@ -69,7 +69,21 @@ config = {
 |---------|---------|-------------|
 | `CORS_ORIGINS` | `['http://localhost:3000']` | Allowed origins |
 | `CORS_METHODS` | `['GET', 'POST', 'PUT', 'DELETE']` | Allowed HTTP methods |
-| `CORS_ALLOW_HEADERS` | `['Content-Type', 'Authorization']` | Allowed headers |
+| `CORS_ALLOW_HEADERS` | `['Content-Type', 'Authorization', 'X-API-Key']` | Allowed headers |
+
+### File Upload Configuration
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `UPLOAD_FOLDER` | `'uploads'` | Directory for file uploads |
+| `ALLOWED_EXTENSIONS` | `{'step', 'stp'}` | Allowed file extensions |
+| `MAX_CONTENT_LENGTH` | `16MB` | Maximum upload file size |
+
+### Deployment Configuration
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `BASE_PATH` | `''` | Base path for subpath deployments (e.g., `/part-management-system`) |
 
 ## Environment-Specific Configurations
 
@@ -172,6 +186,8 @@ class ProductionConfig(Config):
 | `CORS_ORIGINS` | localhost | Comma-separated allowed origins |
 | `PORT` | 5000 | Server port |
 | `LOG_LEVEL` | INFO | Logging level |
+| `BASE_PATH` | (empty) | Base path for subpath deployments |
+| `UPLOAD_FOLDER` | uploads | Directory for file uploads |
 
 ### Database-Specific Variables
 

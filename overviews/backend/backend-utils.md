@@ -2,7 +2,106 @@
 
 ## Overview
 
-The utilities layer provides cross-cutting functionality that supports the core application logic. This includes data validation, sanitization, business rule enforcement, and common helper functions.
+The utilities layer provides cross-cutting functionality that supports the core application logic. This includes authentication, data validation, sanitization, business rule enforcement, file processing, and common helper functions.
+
+## Authentication Utilities (`utils/auth.py`)
+
+### API Key Authentication
+
+#### `require_secret_key(f) -> Callable`
+
+Decorator that enforces API key authentication on Flask routes.
+
+**Purpose**: Secure API endpoints with secret key validation
+
+**Authentication Methods** (checked in order):
+1. `X-API-Key` header
+2. `api_key` query parameter
+3. `api_key` in JSON request body (POST/PUT requests only)
+
+**Usage**:
+```python
+from utils.auth import require_secret_key
+
+@parts_bp.route('/', methods=['GET'])
+@require_secret_key
+def get_parts():
+    # This endpoint requires authentication
+    pass
+```
+
+**Error Responses**:
+- `401 Unauthorized`: Missing or invalid API key
+- Detailed error messages guide proper authentication
+
+#### `_get_api_key_from_request() -> str`
+
+Internal function that extracts API key from various request sources.
+
+**Implementation**:
+```python
+def _get_api_key_from_request():
+    # Check X-API-Key header first
+    api_key = request.headers.get('X-API-Key')
+    if api_key:
+        return api_key
+
+    # Check query parameter
+    api_key = request.args.get('api_key')
+    if api_key:
+        return api_key
+
+    # Check JSON body for POST/PUT
+    if request.is_json and request.method in ['POST', 'PUT']:
+        data = request.get_json(silent=True)
+        if data and 'api_key' in data:
+            return data['api_key']
+
+    return None
+```
+
+## STEP File Processing (`utils/step_converter.py`)
+
+### 3D Model Conversion
+
+#### `convert_step_to_gltf(step_file_path: str, output_dir: str, output_filename: Optional[str] = None) -> dict`
+
+Converts STEP files to GLTF/GLB format for 3D visualization using the cascadio library.
+
+**Purpose**: Enable 3D model visualization in web browsers
+
+**Process**:
+1. Validates STEP file existence
+2. Creates output directory structure
+3. Uses cascadio to convert STEP → GLB
+4. Returns conversion status and file paths
+
+**Parameters**:
+- `step_file_path`: Path to input STEP file
+- `output_dir`: Directory for output files
+- `output_filename`: Optional output filename (defaults to input filename)
+
+**Return Format**:
+```python
+{
+    'success': bool,
+    'error': str or None,
+    'gltf_path': str or None
+}
+```
+
+**Usage**:
+```python
+from utils.step_converter import convert_step_to_gltf
+
+result = convert_step_to_gltf('part.step', 'uploads/1', 'part')
+if result['success']:
+    print(f"Converted to: {result['gltf_path']}")
+else:
+    print(f"Conversion failed: {result['error']}")
+```
+
+**Dependencies**: Requires `cascadio` library (`pip install cascadio`)
 
 ## Validation Utilities (`utils/validation.py`)
 
@@ -389,7 +488,9 @@ def assert_validation_error(func, *args, **kwargs):
 ```
 utils/
 ├── __init__.py          # Package imports
+├── auth.py              # Authentication utilities
 ├── validation.py        # Data validation functions
+├── step_converter.py    # STEP to GLTF conversion
 ├── business_logic.py    # Business rule helpers (future)
 ├── formatting.py        # Data formatting utilities (future)
 └── logging.py          # Logging utilities (future)
@@ -399,12 +500,16 @@ utils/
 
 ```python
 # utils/__init__.py
+from .auth import require_secret_key
 from .validation import validate_part_data, ValidationError
+from .step_converter import convert_step_to_gltf
 from .business_logic import handle_part_assignment
 from .formatting import format_search_results
 
 __all__ = [
+    'require_secret_key',
     'validate_part_data', 'ValidationError',
+    'convert_step_to_gltf',
     'handle_part_assignment',
     'format_search_results'
 ]

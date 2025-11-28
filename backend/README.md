@@ -4,12 +4,15 @@ A Flask-based REST API backend for the Part Management System, providing compreh
 
 ## Features
 
-- **RESTful API**: Complete CRUD operations for parts management
+- **RESTful API**: Complete CRUD operations for parts management with authentication
 - **Database Integration**: SQLAlchemy ORM with SQLite (easily configurable for PostgreSQL/MySQL)
 - **Part Lifecycle Management**: Support for review → CNC/Hand fabrication → completion workflow
 - **Search & Filtering**: Advanced search across multiple fields with pagination
+- **File Management**: STEP file upload, download, and automatic GLTF/GLB conversion for 3D visualization
+- **Authentication**: API key-based authentication with rate limiting
 - **Validation**: Comprehensive input validation and error handling
 - **CORS Support**: Cross-origin resource sharing for frontend integration
+- **Frontend Serving**: Built-in frontend static file serving for full-stack deployment
 - **Development Data**: Automatic sample data initialization for development
 
 ## Quick Start
@@ -44,6 +47,16 @@ A Flask-based REST API backend for the Part Management System, providing compreh
 
 The API will be available at `http://localhost:5000`
 
+## Authentication
+
+The API uses a secret key authentication system. All API endpoints (except health check) require authentication via one of these methods:
+
+- **Header**: `X-API-Key: your-secret-key`
+- **Query Parameter**: `?api_key=your-secret-key`
+- **Request Body**: `{"api_key": "your-secret-key"}` (for POST/PUT requests)
+
+The secret key is configured via the `SECRET_KEY` environment variable or `config.json` file.
+
 ## API Endpoints
 
 ### Parts Management
@@ -66,12 +79,42 @@ The API will be available at `http://localhost:5000`
 | POST | `/api/parts/<id>/complete` | Mark part as completed |
 | POST | `/api/parts/<id>/revert` | Revert completed part |
 
+### File Management
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/parts/<id>/upload` | Upload STEP file for a part |
+| GET | `/api/parts/<id>/download` | Download original STEP file |
+| GET | `/api/parts/<id>/model` | Get GLTF/GLB model for 3D visualization |
+
+### Authentication
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/parts/auth/check` | Check authentication status |
+
 ### Specialized Queries
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/parts/categories/<category>` | Get parts by category |
 | GET | `/api/parts/stats` | Get system statistics |
+
+### Health Check
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/health` | Health check endpoint |
+
+## File Management
+
+The backend supports STEP file uploads for 3D part visualization. When a STEP file is uploaded:
+
+1. The original STEP file is stored in the `uploads/` directory
+2. The file is automatically converted to GLTF/GLB format using the `cascadio` library
+3. The converted model can be accessed via the `/model` endpoint for 3D visualization
+
+**Supported file formats**: `.step`, `.stp`
 
 ## Query Parameters
 
@@ -130,15 +173,24 @@ python create_config.py
 
 - `FLASK_ENV`: Environment (`development`, `testing`, `production`)
 - `DATABASE_URL`: Database connection string (required in production)
-- `SECRET_KEY`: Flask secret key for sessions/cookies (required in production, min 32 chars)
+- `SECRET_KEY`: API secret key for authentication (required, min 32 chars)
 - `PORT`: Server port (default: 5000)
 - `CORS_ORIGINS`: Allowed CORS origins (comma-separated)
+- `BASE_PATH`: Base path for subpath deployments (e.g., `/part-management-system`)
 
 ### Configuration Classes
 
 - `DevelopmentConfig`: Debug mode, SQLite database
 - `TestingConfig`: Testing mode, separate test database
 - `ProductionConfig`: Production settings
+
+## Frontend Serving
+
+The backend can serve the frontend static files directly, enabling full-stack deployment. When the backend receives requests for non-API routes, it serves the built frontend files from the `dist/` directory. This allows for:
+
+- Single-server deployment
+- Simplified hosting configuration
+- Automatic routing for SPA applications
 
 ## Database
 
@@ -173,7 +225,9 @@ backend/
 │   └── parts.py        # Parts API endpoints
 ├── utils/              # Utilities
 │   ├── __init__.py
-│   └── validation.py   # Data validation
+│   ├── auth.py         # Authentication utilities
+│   ├── validation.py   # Data validation
+│   └── step_converter.py # STEP to GLTF conversion
 ├── config.py           # Configuration
 ├── run.py             # Application entry point
 ├── requirements.txt    # Dependencies
@@ -205,7 +259,7 @@ For production deployment, use Gunicorn instead of the Flask development server 
 
 #### Installation
 
-Install production dependencies using uv:
+Install production dependencies using uv (recommended for faster installs):
 ```bash
 cd backend
 uv pip install -r requirements.txt

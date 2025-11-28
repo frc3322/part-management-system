@@ -26,8 +26,8 @@ class Part(db.Model):
     file = db.Column(db.String(200), nullable=True)
     onshape_url = db.Column(db.String(500), nullable=True)
     claimed_date = db.Column(db.DateTime, nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
     category = db.Column(db.String(20), nullable=False, default='review', index=True)
 ```
 
@@ -112,7 +112,7 @@ def to_dict(self) -> dict:
         'status': self.status,
         'notes': self.notes,
         'file': self.file,
-        'onshapeUrl': self.onshape_url,
+        'onshapeUrl': self.onshape_url,  # camelCase for API compatibility
         'claimedDate': self.claimed_date.isoformat() if self.claimed_date else None,
         'createdAt': self.created_at.isoformat(),
         'updatedAt': self.updated_at.isoformat(),

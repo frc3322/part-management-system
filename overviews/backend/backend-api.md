@@ -411,6 +411,111 @@ Returns the updated part object.
 
 ---
 
+## File Management
+
+### POST /api/parts/{id}/upload
+
+Upload a STEP file for a part and automatically convert it to GLTF/GLB format for 3D visualization.
+
+#### Parameters
+- `id` (integer): Part ID
+
+#### Request
+- **Content-Type**: `multipart/form-data`
+- **Body**: Form data with `file` field containing the STEP file
+
+#### Supported Formats
+- `.step` files
+- `.stp` files
+
+#### Behavior
+1. Validates file type and size
+2. Stores original STEP file in `uploads/{part_id}/` directory
+3. Automatically converts STEP to GLTF/GLB using cascadio library
+4. Updates part's `file` field with filename
+5. Returns conversion status and file paths
+
+#### Example Request
+
+```bash
+curl -X POST "http://localhost:5000/api/parts/1/upload" \
+  -H "X-API-Key: your-secret-key-here" \
+  -F "file=@part.step"
+```
+
+#### Response
+
+```json
+{
+  "message": "File uploaded successfully",
+  "filename": "part.step",
+  "file_path": "uploads/1/part.step",
+  "conversion": {
+    "success": true,
+    "error": null,
+    "gltf_path": "uploads/1/part.glb"
+  }
+}
+```
+
+#### Error Responses
+- `400 Bad Request`: Invalid file type or missing file
+- `404 Not Found`: Part not found
+- `500 Internal Server Error`: Upload or conversion failed
+
+---
+
+### GET /api/parts/{id}/download
+
+Download the original STEP file for a part.
+
+#### Parameters
+- `id` (integer): Part ID
+
+#### Behavior
+- Returns the original STEP file as a download
+- Sets appropriate headers for file download
+- File served with `application/octet-stream` MIME type
+
+#### Example Request
+
+```bash
+curl -X GET "http://localhost:5000/api/parts/1/download" \
+  -H "X-API-Key: your-secret-key-here" \
+  -o downloaded_part.step
+```
+
+#### Error Responses
+- `404 Not Found`: Part not found or no file associated
+
+---
+
+### GET /api/parts/{id}/model
+
+Get the converted GLTF/GLB model file for 3D visualization.
+
+#### Parameters
+- `id` (integer): Part ID
+
+#### Behavior
+- Returns the GLTF/GLB file for browser-based 3D viewing
+- Automatically converts STEP file if GLTF doesn't exist
+- Served with `model/gltf-binary` MIME type for WebGL compatibility
+
+#### Example Request
+
+```bash
+curl -X GET "http://localhost:5000/api/parts/1/model" \
+  -H "X-API-Key: your-secret-key-here" \
+  -o model.glb
+```
+
+#### Error Responses
+- `404 Not Found`: Part not found or no model available
+- `500 Internal Server Error`: Conversion failed
+
+---
+
 ## Specialized Endpoints
 
 ### GET /api/parts/categories/{category}

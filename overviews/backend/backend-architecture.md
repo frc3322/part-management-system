@@ -73,19 +73,30 @@ def search_parts(cls, query: str, category: str = None):
 ## Data Flow Architecture
 
 ```
-Client Request → Flask Route → Validation → Business Logic → Database → Response
-       ↓              ↓             ↓            ↓            ↓         ↓
-   HTTP Request   URL Routing   Input Check  Data Processing  SQL      JSON
+Client Request → Authentication → Flask Route → Validation → Business Logic → File Processing → Database → Response
+       ↓               ↓               ↓             ↓            ↓              ↓              ↓         ↓
+   HTTP Request   API Key Check   URL Routing   Input Check  Data Processing  STEP→GLTF Conv   SQL      JSON
 ```
 
 ### Detailed Flow
 
-1. **HTTP Request**: RESTful endpoint receives request
-2. **Route Handler**: Blueprint routes to appropriate function
-3. **Input Validation**: Request data validated and sanitized
-4. **Business Logic**: Domain operations executed
-5. **Database Operation**: SQLAlchemy handles persistence
-6. **Response Formation**: JSON response with appropriate status
+1. **HTTP Request**: RESTful endpoint receives request with API key
+2. **Authentication**: API key validated against server secret
+3. **Route Handler**: Blueprint routes to appropriate function
+4. **Input Validation**: Request data validated and sanitized
+5. **Business Logic**: Domain operations executed
+6. **File Processing**: STEP files converted to GLTF for 3D visualization (if applicable)
+7. **Database Operation**: SQLAlchemy handles persistence
+8. **Response Formation**: JSON response with appropriate status
+
+### File Upload Flow
+
+```
+File Upload → Validation → Storage → Conversion → Database Update → Response
+     ↓           ↓          ↓          ↓              ↓            ↓
+   STEP File   Extension   Disk       GLTF         File Path    Success
+   Received   Check       Save       Generate     Update       Status
+```
 
 ## Component Architecture
 
@@ -135,12 +146,16 @@ Client Request → Flask Route → Validation → Business Logic → Database �
 
 **Responsibilities**:
 - Cross-cutting concerns
+- Authentication and security
 - Data validation and sanitization
+- File processing and conversion
 - Business logic helpers
 - Common operations
 
 **Composition**:
-- Validation utilities
+- **Authentication utilities** (`auth.py`): API key validation and security
+- **Validation utilities** (`validation.py`): Input validation and sanitization
+- **File processing** (`step_converter.py`): STEP to GLTF conversion for 3D visualization
 - Data transformation functions
 - Business rule helpers
 - Error handling utilities
