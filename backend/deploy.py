@@ -6,7 +6,7 @@ import sys
 import subprocess
 import argparse
 import json
-from typing import Optional
+from typing import Optional, Any
 
 # Constants for repeated values
 DEFAULT_DATABASE_URL = "sqlite:///parts_prod.db"
@@ -35,7 +35,7 @@ def load_config() -> dict:
         return {}
 
 
-def get_config_value(config: dict, key: str, default: Optional[str] = None) -> str:
+def get_config_value(config: dict, key: str, default: Any = None) -> Any:
     """Get configuration value with precedence: env var > config > default.
 
     Args:
@@ -75,11 +75,11 @@ def get_cors_origins(config: dict) -> list:
             return json.loads(env_value)
         except json.JSONDecodeError:
             return [origin.strip() for origin in env_value.split(",") if origin.strip()]
-    
+
     config_value = config.get("CORS_ORIGINS")
     if config_value is not None:
         return config_value
-    
+
     return DEFAULT_CORS_ORIGINS
 
 
@@ -95,11 +95,11 @@ def get_base_path(config: dict) -> str:
     env_value = os.environ.get("BASE_PATH")
     if env_value is not None:
         return env_value.rstrip("/")
-    
+
     config_value = config.get("BASE_PATH", "")
     if config_value:
         return config_value.rstrip("/")
-    
+
     return ""
 
 
@@ -118,9 +118,7 @@ def run_command(command: str, description: str, env: Optional[dict] = None) -> b
     print(f"   Command: {command}")
 
     try:
-        subprocess.run(
-            command, shell=True, check=True, env=env
-        )
+        subprocess.run(command, shell=True, check=True, env=env)
         print("   SUCCESS")
         return True
     except subprocess.CalledProcessError as e:
@@ -140,12 +138,38 @@ def install_dependencies() -> bool:
     )
 
 
+def build_frontend(config: dict) -> bool:
+    """Build the frontend with Vite using configuration values."""
+    env = os.environ.copy()
+
+    # Set VITE_BASE_PATH from config for proper routing in built frontend
+    base_path = get_base_path(config)
+    if base_path:
+        env["VITE_BASE_PATH"] = base_path
+        print(f"   VITE_BASE_PATH: {base_path}")
+
+    # Check if npm is available
+    if not run_command("npm --version", "Checking npm installation"):
+        print("ERROR: npm is required but not installed.")
+        print("   Install Node.js and npm from: https://nodejs.org/")
+        return False
+
+    # Install frontend dependencies
+    if not run_command("npm install", "Installing frontend dependencies"):
+        return False
+
+    # Build the frontend
+    return run_command("npm run build", "Building frontend with Vite", env)
+
+
 def run_development() -> bool:
     """Run the application in development mode."""
     return run_command("uv run python run.py", "Starting development server")
 
 
-def run_production_multiworker(config: dict, workers: int = 4, port: int = 8000) -> bool:
+def run_production_multiworker(
+    config: dict, workers: int = 4, port: int = 8000
+) -> bool:
     """Run the application in production mode with multiple workers."""
     env = os.environ.copy()
 
@@ -156,6 +180,7 @@ def run_production_multiworker(config: dict, workers: int = 4, port: int = 8000)
     secret_key = get_config_value(config, "SECRET_KEY")
     if not secret_key:
         import secrets
+
         secret_key = secrets.token_hex(32)
         print(f"SECRET_KEY: {secret_key}")
         print(SECRET_KEY_WARNING)
@@ -163,6 +188,12 @@ def run_production_multiworker(config: dict, workers: int = 4, port: int = 8000)
 
     flask_env = get_config_value(config, "FLASK_ENV", "production")
     env["FLASK_ENV"] = flask_env
+
+    debug = get_config_value(config, "DEBUG", False)
+    env["DEBUG"] = str(debug).lower()
+
+    testing = get_config_value(config, "TESTING", False)
+    env["TESTING"] = str(testing).lower()
 
     cors_origins = get_cors_origins(config)
     env["CORS_ORIGINS"] = json.dumps(cors_origins)
@@ -189,6 +220,7 @@ def run_production_eventlet(config: dict, port: int = 8000) -> bool:
     secret_key = get_config_value(config, "SECRET_KEY")
     if not secret_key:
         import secrets
+
         secret_key = secrets.token_hex(32)
         print(f"SECRET_KEY: {secret_key}")
         print(SECRET_KEY_WARNING)
@@ -196,6 +228,12 @@ def run_production_eventlet(config: dict, port: int = 8000) -> bool:
 
     flask_env = get_config_value(config, "FLASK_ENV", "production")
     env["FLASK_ENV"] = flask_env
+
+    debug = get_config_value(config, "DEBUG", False)
+    env["DEBUG"] = str(debug).lower()
+
+    testing = get_config_value(config, "TESTING", False)
+    env["TESTING"] = str(testing).lower()
 
     cors_origins = get_cors_origins(config)
     env["CORS_ORIGINS"] = json.dumps(cors_origins)
@@ -222,6 +260,7 @@ def run_production_gevent(config: dict, workers: int = 4, port: int = 8000) -> b
     secret_key = get_config_value(config, "SECRET_KEY")
     if not secret_key:
         import secrets
+
         secret_key = secrets.token_hex(32)
         print(f"SECRET_KEY: {secret_key}")
         print(SECRET_KEY_WARNING)
@@ -229,6 +268,12 @@ def run_production_gevent(config: dict, workers: int = 4, port: int = 8000) -> b
 
     flask_env = get_config_value(config, "FLASK_ENV", "production")
     env["FLASK_ENV"] = flask_env
+
+    debug = get_config_value(config, "DEBUG", False)
+    env["DEBUG"] = str(debug).lower()
+
+    testing = get_config_value(config, "TESTING", False)
+    env["TESTING"] = str(testing).lower()
 
     cors_origins = get_cors_origins(config)
     env["CORS_ORIGINS"] = json.dumps(cors_origins)
@@ -259,6 +304,7 @@ def run_production_waitress(config: dict, port: int = 8000) -> bool:
     if not secret_key:
         # Generate a random secret key for development - NOT for production!
         import secrets
+
         secret_key = secrets.token_hex(32)
         print(f"SECRET_KEY: {secret_key}")
         print(SECRET_KEY_WARNING)
@@ -266,6 +312,12 @@ def run_production_waitress(config: dict, port: int = 8000) -> bool:
 
     flask_env = get_config_value(config, "FLASK_ENV", "production")
     env["FLASK_ENV"] = flask_env
+
+    debug = get_config_value(config, "DEBUG", False)
+    env["DEBUG"] = str(debug).lower()
+
+    testing = get_config_value(config, "TESTING", False)
+    env["TESTING"] = str(testing).lower()
 
     cors_origins = get_cors_origins(config)
     env["CORS_ORIGINS"] = json.dumps(cors_origins)
@@ -296,7 +348,7 @@ def main():
             "prod-gevent",
             "install",
         ],
-        help="Deployment mode",
+        help="Deployment mode (production modes build the frontend automatically)",
     )
     parser.add_argument(
         "--workers",
@@ -320,8 +372,10 @@ def main():
     if args.mode == "dev" and args.port == 8000:
         args.port = 5000
 
-    print("DEPLOY: Part Management System Backend Deployment")
+    print("DEPLOY: Part Management System Deployment")
     print(f"   Mode: {args.mode}")
+    if args.mode.startswith("prod"):
+        print("   Includes: Backend + Frontend build")
     print(f"   Port: {args.port}")
     if args.mode in ["prod-multi", "prod-gevent"]:
         print(f"   Workers: {args.workers}")
@@ -336,6 +390,11 @@ def main():
     # Install dependencies for all modes except dev (if already running)
     if args.mode != "dev" and not install_dependencies():
         print("ERROR: Failed to install dependencies")
+        sys.exit(1)
+
+    # Build frontend for production modes
+    if args.mode != "dev" and not build_frontend(config):
+        print("ERROR: Failed to build frontend")
         sys.exit(1)
 
     # Execute the requested mode
