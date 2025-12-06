@@ -4,9 +4,9 @@ import os
 import logging
 from flask import Flask, request, send_from_directory
 from flask_cors import CORS
-from config import config # type: ignore
-from models import db # type: ignore
-from routes import parts_bp # type: ignore
+from config import config  # type: ignore
+from models import db  # type: ignore
+from routes import parts_bp  # type: ignore
 
 
 def create_app(config_name: str = "default") -> Flask:
@@ -38,7 +38,7 @@ def create_app(config_name: str = "default") -> Flask:
 
     # Get base path from environment or config for subpath deployments (e.g., /part-management-system)
     base_path = os.getenv("BASE_PATH", "").rstrip("/")
-    
+
     # Register blueprints with base path prefix if configured
     api_url_prefix = f"{base_path}/api" if base_path else "/api"
     app.register_blueprint(parts_bp, url_prefix=api_url_prefix + "/parts")
@@ -48,7 +48,7 @@ def create_app(config_name: str = "default") -> Flask:
     def health_check():
         """Health check endpoint."""
         return {"status": "healthy"}
-    
+
     # Register health endpoint at base path if configured
     if base_path:
         app.add_url_rule(f"{base_path}/health", "health_check_subpath", health_check)
@@ -64,12 +64,12 @@ def create_app(config_name: str = "default") -> Flask:
     @app.route("/<path:path>")
     def serve_frontend(path):
         """Serve frontend files and handle SPA routing."""
-        
+
         # If deployed at a subpath, strip the base path from the incoming request
         request_path = path
         if base_path and path.startswith(base_path.lstrip("/")):
             # Remove the base path prefix from the request
-            request_path = path[len(base_path.lstrip("/")):]
+            request_path = path[len(base_path.lstrip("/")) :]
             if request_path.startswith("/"):
                 request_path = request_path[1:]
 
@@ -101,7 +101,7 @@ def create_app(config_name: str = "default") -> Flask:
 
 def _init_sample_data():
     """Initialize database with sample data for development."""
-    from models.part import Part # type: ignore
+    from models.part import Part  # type: ignore
     from datetime import datetime, timedelta, timezone
 
     # Check if data already exists
@@ -113,6 +113,7 @@ def _init_sample_data():
         {
             "type": "cnc",
             "name": "Drive Gear",
+            "material": "Steel",
             "status": "Pending",
             "notes": "Check tooth profile",
             "file": "gear.stl",
@@ -122,6 +123,7 @@ def _init_sample_data():
         {
             "type": "cnc",
             "name": "Mounting Bracket",
+            "material": "Aluminum",
             "status": "Approved",
             "notes": "High precision required",
             "file": "bracket.stl",
@@ -133,6 +135,7 @@ def _init_sample_data():
         {
             "type": "hand",
             "name": "Support Frame",
+            "material": "Mild Steel",
             "status": "In Progress",
             "notes": "Weld assembly required",
             "file": "frame.dwg",
@@ -144,6 +147,7 @@ def _init_sample_data():
         {
             "type": "hand",
             "name": "Control Panel",
+            "material": "Aluminum",
             "status": "Completed",
             "notes": "Assembly completed and tested",
             "file": "panel.dwg",
@@ -154,6 +158,7 @@ def _init_sample_data():
         {
             "type": "cnc",
             "name": "Precision Shaft",
+            "material": "Stainless Steel",
             "status": "Pending",
             "notes": "Tight tolerances",
             "file": "shaft.stl",
