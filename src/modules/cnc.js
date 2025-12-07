@@ -53,6 +53,11 @@ function renderPartCard(part, index, container) {
                       part.material || "Not set"
                     }</span>
                 </div>
+                <div class="text-sm text-gray-400 mt-1">
+                    Amount: <span class="text-blue-300 font-semibold">${
+                      part.amount
+                    }</span>
+                </div>
             </div>
             <span class="px-3 py-1 rounded-full text-xs font-bold bg-gray-800 ${statusClass} shadow-3d-inset">
                 ${part.status}

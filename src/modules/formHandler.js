@@ -27,6 +27,7 @@ export function extractFormData() {
     type: document.getElementById("input-category").value,
     name: document.getElementById("input-name").value,
     material: document.getElementById("input-material").value,
+    amount: Number.parseInt(document.getElementById("input-amount").value, 10),
     subsystem: document.getElementById("input-subsystem").value,
     assigned: document.getElementById("input-assigned").value,
     status: document.getElementById("input-status").value,
@@ -45,6 +46,10 @@ function prepareApiData(formData) {
   const apiData = {
     type: formData.type,
     material: formData.material,
+    amount:
+      Number.isFinite(formData.amount) && formData.amount > 0
+        ? formData.amount
+        : 1,
     status: formData.status,
     notes: formData.notes,
     onshapeUrl: formData.onshapeUrl,
@@ -151,6 +156,10 @@ export async function handleFormSubmit(e) {
     const trimmedMaterial = formData.material.trim();
     if (trimmedMaterial.length === 0) {
       alert("Material is required.");
+      return;
+    }
+    if (!Number.isFinite(formData.amount) || formData.amount <= 0) {
+      alert("Amount must be at least 1.");
       return;
     }
     formData.material = trimmedMaterial;

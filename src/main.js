@@ -51,6 +51,8 @@ import {
   unclaimPart,
   closeUnclaimModal,
   confirmUnclaim,
+  closeCompleteAmountModal,
+  confirmCompleteAmount,
 } from "./modules/partActions.js";
 import { handleFormSubmit } from "./modules/formHandler.js";
 import {
@@ -106,6 +108,8 @@ globalThis.closeAssignModal = closeAssignModal;
 globalThis.unclaimPart = unclaimPart;
 globalThis.closeUnclaimModal = closeUnclaimModal;
 globalThis.confirmUnclaim = confirmUnclaim;
+globalThis.closeCompleteAmountModal = closeCompleteAmountModal;
+globalThis.confirmCompleteAmount = confirmCompleteAmount;
 globalThis.sortTable = sortTable;
 
 // Authentication functions

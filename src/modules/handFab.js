@@ -70,6 +70,7 @@ export function createHandFabRow(part, index) {
         <td class="p-3 text-sm text-blue-300 font-semibold">${
           part.material || "-"
         }</td>
+        <td class="p-3 text-sm text-blue-200 font-semibold">${part.amount}</td>
         <td class="p-3">
             <div class="flex items-center">
                 <div class="flex items-center gap-2">
@@ -121,7 +122,7 @@ export function renderHandFab() {
     (appState.isLoading && appState.parts.hand.length === 0)
   ) {
     const row = document.createElement("tr");
-    row.innerHTML = `<td colspan="8" class="text-center py-8 text-gray-500"><div class="flex items-center justify-center"><i class="fa-solid fa-spinner fa-spin text-purple-400 mr-2"></i> Loading hand fabrication parts...</div></td>`;
+    row.innerHTML = `<td colspan="9" class="text-center py-8 text-gray-500"><div class="flex items-center justify-center"><i class="fa-solid fa-spinner fa-spin text-purple-400 mr-2"></i> Loading hand fabrication parts...</div></td>`;
     tbody.appendChild(row);
     return;
   }
@@ -130,7 +131,7 @@ export function renderHandFab() {
 
   if (filtered.length === 0) {
     const row = document.createElement("tr");
-    row.innerHTML = `<td colspan="8" class="text-center py-8 text-gray-500">${
+    row.innerHTML = `<td colspan="9" class="text-center py-8 text-gray-500">${
       appState.searchQuery ? "No results found." : "No Hand Fab parts."
     }</td>`;
     tbody.appendChild(row);
