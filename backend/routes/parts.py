@@ -120,6 +120,10 @@ def create_part():
         if material is None or str(material).strip() == "":
             return jsonify({"error": "Material is required"}), 400
 
+        subsystem = data.get("subsystem")
+        if subsystem is None or str(subsystem).strip() == "":
+            return jsonify({"error": "Subsystem is required"}), 400
+
         amount = data.get("amount")
         if amount is None or str(amount).strip() == "":
             data["amount"] = 1
@@ -187,6 +191,11 @@ def update_part(part_id):
 
         if not data:
             return jsonify({"error": "No data provided"}), 400
+
+        if "subsystem" in data:
+            subsystem = data.get("subsystem")
+            if subsystem is None or str(subsystem).strip() == "":
+                return jsonify({"error": "Subsystem is required"}), 400
 
         if "amount" in data:
             amount = data.get("amount")
