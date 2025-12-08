@@ -59,6 +59,7 @@ def get_parts():
                 Part.subsystem.ilike(f"%{search_query}%"),
                 Part.assigned.ilike(f"%{search_query}%"),
                 Part.material.ilike(f"%{search_query}%"),
+                Part.part_id.ilike(f"%{search_query}%"),
             )
             query = query.filter(search_filter)
 
@@ -115,6 +116,11 @@ def create_part():
 
         if not data.get("category"):
             data["category"] = "review"
+
+        part_id = data.get("partId") or data.get("part_id")
+        if part_id is None or str(part_id).strip() == "":
+            return jsonify({"error": "Part ID is required"}), 400
+        data["part_id"] = str(part_id).strip()
 
         material = data.get("material")
         if material is None or str(material).strip() == "":
@@ -196,6 +202,12 @@ def update_part(part_id):
             subsystem = data.get("subsystem")
             if subsystem is None or str(subsystem).strip() == "":
                 return jsonify({"error": "Subsystem is required"}), 400
+
+        if "partId" in data or "part_id" in data:
+            part_id = data.get("partId") or data.get("part_id")
+            if part_id is None or str(part_id).strip() == "":
+                return jsonify({"error": "Part ID is required"}), 400
+            data["part_id"] = str(part_id).strip()
 
         if "amount" in data:
             amount = data.get("amount")

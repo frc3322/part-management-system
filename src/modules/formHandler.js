@@ -26,6 +26,7 @@ export function extractFormData() {
     originTab: document.getElementById("edit-origin-tab").value,
     type: document.getElementById("input-category").value,
     name: document.getElementById("input-name").value,
+    partId: document.getElementById("input-part-id").value,
     material: document.getElementById("input-material").value,
     amount: Number.parseInt(document.getElementById("input-amount").value, 10),
     subsystem: document.getElementById("input-subsystem").value,
@@ -45,6 +46,7 @@ export function extractFormData() {
 function prepareApiData(formData) {
   const apiData = {
     type: formData.type,
+    partId: formData.partId,
     material: formData.material,
     subsystem: formData.subsystem,
     amount:
@@ -62,15 +64,14 @@ function prepareApiData(formData) {
   }
 
   // Handle type-specific fields
+  apiData.name = formData.name;
+
   if (formData.type === "cnc") {
-    apiData.name = formData.name;
     // Handle file if uploaded
     if (formData.fileInput.files.length > 0) {
       apiData.file = formData.fileInput.files[0].name;
     }
   } else {
-    // For hand fabrication parts, name field is used as ID
-    apiData.name = formData.name;
     apiData.assigned = formData.assigned;
   }
 
@@ -153,8 +154,18 @@ export async function handleFormSubmit(e) {
 
   try {
     const formData = extractFormData();
+    const trimmedName = formData.name.trim();
+    const trimmedPartId = formData.partId.trim();
     const trimmedMaterial = formData.material.trim();
     const trimmedSubsystem = formData.subsystem.trim();
+    if (trimmedName.length === 0) {
+      alert("Part name is required.");
+      return;
+    }
+    if (trimmedPartId.length === 0) {
+      alert("Part ID is required.");
+      return;
+    }
     if (trimmedMaterial.length === 0) {
       alert("Material is required.");
       return;
@@ -167,6 +178,8 @@ export async function handleFormSubmit(e) {
       alert("Amount must be at least 1.");
       return;
     }
+    formData.name = trimmedName;
+    formData.partId = trimmedPartId;
     formData.material = trimmedMaterial;
     formData.subsystem = trimmedSubsystem;
     const apiData = prepareApiData(formData);

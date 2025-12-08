@@ -300,7 +300,13 @@ function normalizePart(part) {
   const parsedAmount = Number.parseInt(part?.amount ?? 1, 10);
   const safeAmount =
     Number.isFinite(parsedAmount) && parsedAmount > 0 ? parsedAmount : 1;
-  return { ...part, amount: safeAmount };
+  const rawPartId = (part && (part.partId ?? part.part_id ?? "")) || "";
+  const normalizedPartId = String(rawPartId).trim();
+  const fallbackId =
+    normalizedPartId ||
+    (part?.name ? String(part.name) : "") ||
+    (part?.id ? String(part.id) : "");
+  return { ...part, amount: safeAmount, partId: fallbackId };
 }
 
 // Export individual state variables for backward compatibility

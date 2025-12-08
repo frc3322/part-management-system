@@ -63,9 +63,14 @@ export function createHandFabRow(part, index) {
         <td class="p-3">
             ${cadPreview}
         </td>
-        <td class="p-3 font-mono text-sm text-blue-200 font-bold">${
-          part.id
-        }</td>
+        <td class="p-3">
+            <div class="font-mono text-sm text-blue-200 font-bold">${
+              part.name || "Unnamed"
+            }</div>
+            <div class="text-xs text-gray-500">ID: ${
+              part.partId || part.id || "N/A"
+            }</div>
+        </td>
         <td class="p-3">${part.subsystem || "-"}</td>
         <td class="p-3 text-sm text-blue-300 font-semibold">${
           part.material || "-"

@@ -46,27 +46,31 @@ function renderPartCard(part, index, container) {
   card.innerHTML = `
         <div class="flex justify-between items-start">
             <div>
-                <h3 class="text-xl font-bold text-blue-300">${part.name}</h3>
-                <span class="text-xs text-gray-500">${part.id}</span>
-                <div class="text-sm text-gray-400 mt-1">
+                <h3 class="text-xl font-bold text-blue-300">${
+                  part.name || "Unnamed"
+                }</h3>
+                <div class="text-sm text-blue-200 font-semibold mt-1">
+                    Amount: ${part.amount}
+                </div>
+                <div class="text-xs text-gray-500 mt-1">
+                    ID: ${part.partId || part.id || "N/A"}
+                </div>
+            </div>
+            <div class="flex flex-col items-end gap-2">
+                <span class="px-3 py-1 rounded-full text-xs font-bold bg-gray-800 ${statusClass} shadow-3d-inset">
+                    ${part.status}
+                </span>
+                <div class="text-sm text-gray-400">
                     Subsystem: <span class="text-blue-300 font-semibold">${
                       part.subsystem || "Not set"
                     }</span>
                 </div>
-                <div class="text-sm text-gray-400 mt-1">
+                <div class="text-sm text-gray-400">
                     Material: <span class="text-blue-300 font-semibold">${
                       part.material || "Not set"
                     }</span>
                 </div>
-                <div class="text-sm text-gray-400 mt-1">
-                    Amount: <span class="text-blue-300 font-semibold">${
-                      part.amount
-                    }</span>
-                </div>
             </div>
-            <span class="px-3 py-1 rounded-full text-xs font-bold bg-gray-800 ${statusClass} shadow-3d-inset">
-                ${part.status}
-            </span>
         </div>
 
         <div class="h-48 w-full bg-gray-800 rounded-lg relative overflow-hidden shadow-3d-inset" id="model-view-${index}">

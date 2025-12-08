@@ -206,8 +206,9 @@ export function editPart(tab, index) {
   document.getElementById("input-category").disabled = true;
   handleCategoryChange(type);
 
-  document.getElementById("input-name").value =
-    type === "cnc" ? part.name : part.id;
+  document.getElementById("input-name").value = part.name || "";
+  document.getElementById("input-part-id").value =
+    part.partId || part.name || part.id || "";
   document.getElementById("input-material").value = part.material || "";
   document.getElementById("input-amount").value = part.amount || 1;
   document.getElementById("input-status").value = part.status;

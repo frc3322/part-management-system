@@ -62,6 +62,7 @@ def validate_string_fields(data: Dict[str, Any]) -> Dict[str, Any]:
     string_fields = [
         "type",
         "name",
+        "part_id",
         "subsystem",
         "assigned",
         "status",
@@ -77,6 +78,7 @@ def validate_string_fields(data: Dict[str, Any]) -> Dict[str, Any]:
         "status": 50,
         "file": 200,
         "onshape_url": 500,
+        "part_id": 100,
     }
 
     for field in string_fields:

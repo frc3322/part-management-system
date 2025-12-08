@@ -14,6 +14,7 @@ class Part(db.Model):
         id (int): Primary key, auto-incremented
         type (str): Part type - 'cnc' or 'hand'
         name (str): Part name/description
+        part_id (str): Human-friendly part identifier
         subsystem (str): System subsystem the part belongs to
         assigned (str): Name of assigned team member
         status (str): Current status in workflow
@@ -31,6 +32,7 @@ class Part(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(50), nullable=True)  # 'cnc' or 'hand'
     material = db.Column(db.String(200), nullable=False)
+    part_id = db.Column(db.String(100), nullable=False)
     name = db.Column(db.String(200), nullable=True)
     subsystem = db.Column(db.String(100), nullable=True)
     assigned = db.Column(db.String(100), nullable=True)
@@ -59,6 +61,8 @@ class Part(db.Model):
             self.category = "review"
         if not self.amount:
             self.amount = 1
+        if not self.part_id:
+            self.part_id = ""
 
     def to_dict(self) -> dict:
         """Convert part to dictionary representation.
@@ -71,6 +75,7 @@ class Part(db.Model):
             "type": self.type,
             "material": self.material,
             "name": self.name,
+            "partId": self.part_id,
             "subsystem": self.subsystem,
             "assigned": self.assigned,
             "status": self.status,
@@ -94,6 +99,7 @@ class Part(db.Model):
             "type",
             "material",
             "name",
+            "part_id",
             "subsystem",
             "assigned",
             "status",
@@ -111,6 +117,7 @@ class Part(db.Model):
             "claimedDate": "claimed_date",
             "createdAt": "created_at",
             "updatedAt": "updated_at",
+            "partId": "part_id",
         }
 
         for key, value in data.items():
@@ -158,6 +165,7 @@ class Part(db.Model):
             cls.subsystem.ilike(f"%{query}%"),
             cls.assigned.ilike(f"%{query}%"),
             cls.material.ilike(f"%{query}%"),
+            cls.part_id.ilike(f"%{query}%"),
         )
 
         if category:

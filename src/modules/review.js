@@ -59,7 +59,8 @@ export function generateReviewFileHTML(part) {
  */
 export function createReviewRow(part, index) {
   const isCNC = part.type === "cnc";
-  const displayID = isCNC ? part.name : part.id;
+  const displayName = part.name || "Unnamed";
+  const displayPartId = part.partId || part.name || part.id || "N/A";
   const subDisplay = part.subsystem || "";
   const previewHTML = generateReviewPreviewHTML(part);
   const fileHTML = generateReviewFileHTML(part);
@@ -80,7 +81,10 @@ export function createReviewRow(part, index) {
         <td class="p-3">
             ${previewHTML}
         </td>
-        <td class="p-3 font-bold text-gray-200">${displayID}</td>
+        <td class="p-3">
+            <div class="font-bold text-gray-200">${displayName}</div>
+            <div class="text-xs text-gray-500">ID: ${displayPartId}</div>
+        </td>
         <td class="p-3 text-sm text-gray-400">${subDisplay}</td>
         <td class="p-3 text-sm text-blue-300 font-semibold">${
           part.material || "Not set"

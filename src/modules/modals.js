@@ -112,7 +112,6 @@ export function handleCategoryChange(type) {
   const assignField = document.getElementById("field-assigned");
   const fileField = document.getElementById("field-file");
   const fileLabel = document.getElementById("label-file");
-  const nameLabel = document.getElementById("label-name");
   const isEdit = document.getElementById("edit-mode").value === "true";
   const originTab = document.getElementById("edit-origin-tab").value;
 
@@ -122,7 +121,6 @@ export function handleCategoryChange(type) {
     assignField.classList.add("hidden");
     fileField.classList.remove("hidden");
     fileLabel.innerText = "3D Model (STEP)";
-    nameLabel.innerText = "Part Name";
     const fileInput = document.getElementById("input-file");
     if (fileInput) {
       fileInput.setAttribute("accept", ".step,.stp");
@@ -135,7 +133,9 @@ export function handleCategoryChange(type) {
       assignField.classList.add("hidden");
       document.getElementById("input-assigned").value = "";
     }
-    nameLabel.innerText = "Part ID";
+    if (fileField) {
+      fileField.classList.add("hidden");
+    }
   }
 }
 
