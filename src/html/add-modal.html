@@ -150,7 +150,7 @@
         <label
           class="block text-sm font-bold mb-2 text-gray-400"
           id="label-file"
-          >3D Model (STEP)</label
+          >File (STEP or PDF)</label
         >
         <div class="neumorphic-input rounded-lg p-1 flex items-center">
           <label
@@ -161,7 +161,7 @@
               type="file"
               id="input-file"
               class="hidden"
-              accept=".step,.stp"
+              accept=".step,.stp,.pdf"
               onchange="updateFileName()"
             />
           </label>
@@ -172,8 +172,12 @@
           >
         </div>
         <p class="text-xs text-gray-500 mt-1">
-          STEP files (.step, .stp) will be converted for visualization
+          STEP files (.step, .stp) convert for 3D view; PDFs preview inline
         </p>
+        <div id="upload-status" class="text-xs mt-2 hidden items-center gap-2">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          <span>Uploading file...</span>
+        </div>
       </div>
 
       <div class="mb-6">

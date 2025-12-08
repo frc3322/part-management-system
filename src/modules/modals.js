@@ -120,10 +120,10 @@ export function handleCategoryChange(type) {
   if (type === "cnc") {
     assignField.classList.add("hidden");
     fileField.classList.remove("hidden");
-    fileLabel.innerText = "3D Model (STEP)";
+    fileLabel.innerText = "File (STEP or PDF)";
     const fileInput = document.getElementById("input-file");
     if (fileInput) {
-      fileInput.setAttribute("accept", ".step,.stp");
+      fileInput.setAttribute("accept", ".step,.stp,.pdf");
     }
   } else {
     fileField.classList.add("hidden");

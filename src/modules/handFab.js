@@ -48,6 +48,11 @@ export function calculateDaysClaimedHTML(part) {
 export function createHandFabRow(part, index) {
   const daysClaimedHTML = calculateDaysClaimedHTML(part);
   const statusClass = getStatusClass(part.status);
+  const showStartButton =
+    part.status === "Reviewed" || part.status === "Already Started";
+  const showCompleteButton =
+    part.status === "In Progress" || part.status === "Already Started";
+  const hasDrawing = Boolean(part.onshapeUrl);
 
   const cadPreview = `<div class="w-12 h-12 bg-gray-800 rounded border border-gray-700 flex items-center justify-center text-purple-400 cursor-pointer hover:border-purple-400 transition overflow-hidden relative group" onclick="window.open('${
     part.onshapeUrl || "#"
@@ -79,7 +84,7 @@ export function createHandFabRow(part, index) {
         <td class="p-3">
             <div class="flex items-center">
                 <div class="flex items-center gap-2">
-                    <div class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-xs flex items-center justify-center text-white font-bold">
+                    <div class="w-6 h-6 rounded-full bg-linear-to-br from-blue-400 to-blue-600 text-xs flex items-center justify-center text-white font-bold">
                         ${part.assigned ? part.assigned.charAt(0) : "?"}
                     </div>
                     ${part.assigned || "Unassigned"}
@@ -97,16 +102,31 @@ export function createHandFabRow(part, index) {
         }</td>
         <td class="p-3">
             ${
-              part.status === "Reviewed" || part.status === "Already Started"
+              showStartButton
                 ? `<button onclick="globalThis.markInProgress('hand', ${index})" class="neumorphic-btn px-2 py-1 text-blue-400 hover:text-blue-300 mr-2" title="Start Work / Claim"><i class="fa-solid fa-play"></i></button>`
                 : ""
             }
-            <button onclick="globalThis.markCompleted('hand', ${index})" class="neumorphic-btn px-2 py-1 text-green-400 hover:text-green-300 mr-2" title="Mark Completed"><i class="fa-solid fa-check-circle"></i></button>
+            ${
+              showCompleteButton
+                ? `<button onclick="globalThis.markCompleted('hand', ${index})" class="neumorphic-btn px-2 py-1 text-green-400 hover:text-green-300 mr-2" title="Mark Completed"><i class="fa-solid fa-check-circle"></i></button>`
+                : ""
+            }
             ${
               part.assigned && part.assigned !== ""
                 ? `<button onclick="globalThis.unclaimPart(${index})" class="neumorphic-btn px-2 py-1 text-orange-400 hover:text-orange-300 mr-2" title="Unclaim Part"><i class="fa-solid fa-user-slash"></i></button>`
                 : ""
             }
+            <button ${hasDrawing ? "" : "disabled"} onclick="${
+    hasDrawing ? `globalThis.viewHandDrawing(${index})` : ""
+  }" class="neumorphic-btn px-2 py-1 ${
+    hasDrawing
+      ? "text-purple-300 hover:text-purple-200"
+      : "text-gray-500 cursor-not-allowed opacity-50"
+  } mr-2" title="${
+    hasDrawing ? "View/Print Drawing" : "No drawing URL provided"
+  }">
+                <i class="fa-solid fa-print"></i>
+            </button>
             <button onclick="globalThis.editPart('hand', ${index})" class="text-gray-400 hover:text-blue-400 mr-2"><i class="fa-solid fa-pen"></i></button>
             <button onclick="globalThis.deletePart('hand', ${index})" class="text-gray-400 hover:text-red-400"><i class="fa-solid fa-trash"></i></button>
         </td>

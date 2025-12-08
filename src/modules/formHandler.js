@@ -15,6 +15,41 @@ import {
   getPart,
 } from "../utils/partsApi.js";
 
+function setUploadStatus(state) {
+  const statusEl = document.getElementById("upload-status");
+  if (!statusEl) return;
+
+  statusEl.classList.remove(
+    "hidden",
+    "text-blue-300",
+    "text-green-300",
+    "text-red-300"
+  );
+
+  if (state === "uploading") {
+    statusEl.querySelector("span").textContent = "Uploading file...";
+    statusEl.classList.add("flex", "text-blue-300");
+    return;
+  }
+
+  if (state === "success") {
+    statusEl.querySelector("span").textContent = "Upload complete";
+    statusEl.classList.add("flex", "text-green-300");
+    setTimeout(() => {
+      statusEl.classList.add("hidden");
+    }, 1200);
+    return;
+  }
+
+  if (state === "error") {
+    statusEl.querySelector("span").textContent = "Upload failed";
+    statusEl.classList.add("flex", "text-red-300");
+    return;
+  }
+
+  statusEl.classList.add("hidden");
+}
+
 /**
  * Extract form data from the part form
  * @returns {Object} Form data object
@@ -86,12 +121,15 @@ function prepareApiData(formData) {
  */
 async function handleFileUpload(partId, file) {
   try {
+    setUploadStatus("uploading");
     await uploadPartFile(partId, file);
     const updatedPart = await getPart(partId);
     updatePartInState(partId, updatedPart);
+    setUploadStatus("success");
     return updatedPart;
   } catch (error) {
     console.error("Failed to upload file:", error);
+    setUploadStatus("error");
     alert("Part saved but file upload failed. Please try uploading again.");
     return null;
   }
@@ -195,6 +233,7 @@ export async function handleFormSubmit(e) {
     console.error("Failed to save part:", error);
     alert("Failed to save part. Please try again.");
   } finally {
+    setUploadStatus("idle");
     if (submitButton) submitButton.disabled = false;
   }
 }

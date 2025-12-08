@@ -4,7 +4,11 @@
 import { appState } from "./state.js";
 import { filterParts, getStatusClass } from "../utils/helpers.js";
 import { loadGLTFModel } from "../components/threeDViewer.js";
-import { getPartModelBlobUrl, downloadPartFile } from "../utils/partsApi.js";
+import {
+  getPartModelBlobUrl,
+  getPartFileBlobUrl,
+  downloadPartFile,
+} from "../utils/partsApi.js";
 
 /**
  * Render loading state for CNC tab
@@ -31,6 +35,11 @@ function renderEmptyState(container) {
   container.appendChild(emptyState);
 }
 
+function getFileExtension(filename) {
+  if (!filename || !filename.includes(".")) return "";
+  return filename.split(".").pop().toLowerCase();
+}
+
 /**
  * Render a single part card
  * @param {Object} part - The part data
@@ -42,6 +51,10 @@ function renderPartCard(part, index, container) {
   const card = document.createElement("div");
   card.className =
     "neumorphic-card p-5 flex flex-col gap-3 transform transition hover:scale-[1.02] duration-300";
+
+  const fileExt = getFileExtension(part.file);
+  const hasStep = fileExt === "step" || fileExt === "stp";
+  const hasPdf = fileExt === "pdf";
 
   card.innerHTML = `
         <div class="flex justify-between items-start">
@@ -75,17 +88,24 @@ function renderPartCard(part, index, container) {
 
         <div class="h-48 w-full bg-gray-800 rounded-lg relative overflow-hidden shadow-3d-inset" id="model-view-${index}">
             ${
-              part.file
+              hasStep
                 ? `<div class="absolute inset-0 flex items-center justify-center">
                         <div class="text-center">
                             <i class="fa-solid fa-cube text-4xl text-blue-500 mb-2 animate-pulse"></i>
                             <p class="text-xs text-gray-400">Loading model...</p>
                         </div>
                     </div>`
+                : hasPdf
+                ? `<div class="absolute inset-0 flex items-center justify-center">
+                        <div class="text-center">
+                            <i class="fa-solid fa-file-pdf text-4xl text-red-400 mb-2 animate-pulse"></i>
+                            <p class="text-xs text-gray-400">Loading PDF...</p>
+                        </div>
+                    </div>`
                 : `<div class="absolute inset-0 flex items-center justify-center text-center text-gray-600">
                         <div>
                             <i class="fa-solid fa-cloud-upload text-3xl mb-2"></i>
-                            <p class="text-xs">No Model</p>
+                            <p class="text-xs">No File</p>
                         </div>
                     </div>`
             }
@@ -98,10 +118,14 @@ function renderPartCard(part, index, container) {
         </div>
 
         <div class="flex justify-end mt-2 gap-2">
-            <button onclick="globalThis.markCompleted('cnc', ${index})" class="neumorphic-btn px-2 py-1 text-green-400 hover:text-green-300 mr-auto" title="Mark Completed"><i class="fa-solid fa-check-circle"></i> Done</button>
+            ${
+              part.status === "In Progress" || part.status === "Already Started"
+                ? `<button onclick="globalThis.markCompleted('cnc', ${index})" class="neumorphic-btn px-2 py-1 text-green-400 hover:text-green-300 mr-auto" title="Mark Completed"><i class="fa-solid fa-check-circle"></i> Done</button>`
+                : ""
+            }
             ${
               part.file
-                ? `<button onclick="globalThis.downloadStepFile(${part.id}, '${part.file}')" class="neumorphic-btn px-2 py-1 text-purple-400 hover:text-purple-300" title="Download STEP File"><i class="fa-solid fa-download"></i> STEP</button>`
+                ? `<button onclick="globalThis.downloadStepFile(${part.id}, '${part.file}')" class="neumorphic-btn px-2 py-1 text-purple-400 hover:text-purple-300" title="Download File"><i class="fa-solid fa-download"></i> Download</button>`
                 : ""
             }
             ${
@@ -125,19 +149,34 @@ function renderPartCard(part, index, container) {
 function loadPartModel(part, index) {
   if (!part.file) return;
 
+  const fileExt = getFileExtension(part.file);
+  const containerId = `model-view-${index}`;
+
   setTimeout(async () => {
     try {
+      if (fileExt === "pdf") {
+        const fileUrl = await getPartFileBlobUrl(part.id);
+        const container = document.getElementById(containerId);
+        if (container) {
+          container.innerHTML = `
+            <iframe src="${fileUrl}" class="absolute inset-0 w-full h-full border-0 bg-white"></iframe>
+            <div class="absolute top-2 right-2 bg-gray-900 bg-opacity-70 text-xs text-white px-2 py-1 rounded">PDF Preview</div>
+          `;
+        }
+        return;
+      }
+
       const modelUrl = await getPartModelBlobUrl(part.id);
-      loadGLTFModel(`model-view-${index}`, modelUrl);
+      loadGLTFModel(containerId, modelUrl);
     } catch (error) {
-      console.error("Failed to load model:", error);
-      const container = document.getElementById(`model-view-${index}`);
+      console.error("Failed to load file:", error);
+      const container = document.getElementById(containerId);
       if (container) {
         container.innerHTML = `
                     <div class="absolute inset-0 flex items-center justify-center text-center text-red-400">
                         <div>
                             <i class="fa-solid fa-exclamation-triangle text-2xl mb-2"></i>
-                            <p class="text-xs">Failed to load model</p>
+                            <p class="text-xs">Failed to load file</p>
                         </div>
                     </div>
                 `;
@@ -176,7 +215,7 @@ export function renderCNC() {
 }
 
 /**
- * Download STEP file for a part
+ * Download the stored file for a part
  * @param {number} partId - Part ID
  * @param {string} filename - Filename for download
  */

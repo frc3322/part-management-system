@@ -63,12 +63,44 @@ import {
   hideAuthModal,
 } from "./modules/auth.js";
 import { downloadStepFile } from "./modules/cnc.js";
+import {
+  viewHandDrawing,
+  closeDrawingModal,
+  printDrawing,
+  refreshDrawing,
+} from "./modules/drawingViewer.js";
+
+function applyTooltip(element) {
+  const tooltipText = element.getAttribute("title");
+  if (!tooltipText || element.dataset.tooltipInitialized === "true") return;
+  element.dataset.tooltip = tooltipText;
+  element.dataset.tooltipInitialized = "true";
+  element.removeAttribute("title");
+  element.classList.add("tooltip-target");
+}
+
+function initializeTooltips(root = document) {
+  const titledElements = root.querySelectorAll("[title]");
+  titledElements.forEach(applyTooltip);
+}
+
+const tooltipObserver = new MutationObserver((mutations) => {
+  for (const mutation of mutations) {
+    mutation.addedNodes.forEach((node) => {
+      if (!(node instanceof HTMLElement)) return;
+      initializeTooltips(node);
+    });
+  }
+});
 
 // Initialize application
 document.addEventListener("DOMContentLoaded", async () => {
   // Initialize authentication modal first and ensure it's hidden initially
   initializeAuthModal();
   hideAuthModal(); // Ensure modal is hidden at startup
+
+  initializeTooltips();
+  tooltipObserver.observe(document.body, { childList: true, subtree: true });
 
   // Check if user is authenticated by validating with backend (will show modal if not)
   const isAuthenticated = await checkAuthentication();
@@ -111,6 +143,10 @@ globalThis.confirmUnclaim = confirmUnclaim;
 globalThis.closeCompleteAmountModal = closeCompleteAmountModal;
 globalThis.confirmCompleteAmount = confirmCompleteAmount;
 globalThis.sortTable = sortTable;
+globalThis.viewHandDrawing = viewHandDrawing;
+globalThis.closeDrawingModal = closeDrawingModal;
+globalThis.printDrawing = printDrawing;
+globalThis.refreshDrawing = refreshDrawing;
 
 // Authentication functions
 globalThis.showAuthModal = showAuthModal;
