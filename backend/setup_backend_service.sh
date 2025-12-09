@@ -4,6 +4,8 @@ set -euo pipefail
 project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 backend_dir="$project_root/backend"
 venv_path="${VENV_PATH:-$project_root/.venv}"
+service_name="part-management-backend.service"
+service_file="/etc/systemd/system/$service_name"
 uv_bin="${UV_BIN:-$(command -v uv || true)}"
 
 install_uv() {
@@ -18,6 +20,34 @@ install_uv() {
   fi
 }
 
+create_service() {
+  sudo tee "$service_file" >/dev/null <<EOF
+[Unit]
+Description=Part Management System Backend
+After=network.target
+
+[Service]
+Type=simple
+User=$(whoami)
+Group=$(whoami)
+WorkingDirectory=$backend_dir
+Environment="PATH=$venv_path/bin:\$PATH"
+Environment="VIRTUAL_ENV=$venv_path"
+ExecStart=$uv_bin run python $backend_dir/deploy.py prod-multi --port 5000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+}
+
+enable_service() {
+  sudo systemctl daemon-reload
+  sudo systemctl enable "$service_name"
+  sudo systemctl start "$service_name"
+}
+
 main() {
   install_uv
   cd "$project_root"
@@ -25,6 +55,8 @@ main() {
   source .venv/bin/activate
   cd "$backend_dir"
   "$uv_bin" sync --active
+  create_service
+  enable_service
 }
 
 main "$@"
