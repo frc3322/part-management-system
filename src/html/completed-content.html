@@ -6,12 +6,84 @@
   <table class="w-full text-left border-collapse">
     <thead>
       <tr class="text-blue-400 border-b border-gray-700">
-        <th class="p-3">Type</th>
-        <th class="p-3">ID / Name</th>
-        <th class="p-3">Subsystem</th>
-        <th class="p-3">Material</th>
-        <th class="p-3">Status</th>
-        <th class="p-3">Notes</th>
+        <th
+          class="p-3 cursor-pointer hover:text-blue-300 transition"
+          data-sort-category="completed"
+          data-sort-key="type"
+          onclick="sortTable('completed', 'type')"
+        >
+          Type
+          <i
+            class="fa-solid fa-sort text-xs ml-1 sort-icon"
+            data-sort-category="completed"
+            data-sort-key="type"
+          ></i>
+        </th>
+        <th
+          class="p-3 cursor-pointer hover:text-blue-300 transition"
+          data-sort-category="completed"
+          data-sort-key="partId"
+          onclick="sortTable('completed', 'partId')"
+        >
+          ID / Name
+          <i
+            class="fa-solid fa-sort text-xs ml-1 sort-icon"
+            data-sort-category="completed"
+            data-sort-key="partId"
+          ></i>
+        </th>
+        <th
+          class="p-3 cursor-pointer hover:text-blue-300 transition"
+          data-sort-category="completed"
+          data-sort-key="subsystem"
+          onclick="sortTable('completed', 'subsystem')"
+        >
+          Subsystem
+          <i
+            class="fa-solid fa-sort text-xs ml-1 sort-icon"
+            data-sort-category="completed"
+            data-sort-key="subsystem"
+          ></i>
+        </th>
+        <th
+          class="p-3 cursor-pointer hover:text-blue-300 transition"
+          data-sort-category="completed"
+          data-sort-key="material"
+          onclick="sortTable('completed', 'material')"
+        >
+          Material
+          <i
+            class="fa-solid fa-sort text-xs ml-1 sort-icon"
+            data-sort-category="completed"
+            data-sort-key="material"
+          ></i>
+        </th>
+        <th
+          class="p-3 cursor-pointer hover:text-blue-300 transition"
+          data-sort-category="completed"
+          data-sort-key="status"
+          onclick="sortTable('completed', 'status')"
+        >
+          Status
+          <i
+            class="fa-solid fa-sort text-xs ml-1 sort-icon"
+            data-sort-category="completed"
+            data-sort-key="status"
+          ></i>
+        </th>
+        <th
+          class="p-3 cursor-pointer hover:text-blue-300 transition"
+          data-sort-category="completed"
+          data-sort-key="notes"
+          onclick="sortTable('completed', 'notes')"
+        >
+          Notes
+          <i
+            class="fa-solid fa-sort text-xs ml-1 sort-icon"
+            data-sort-category="completed"
+            data-sort-key="notes"
+          ></i>
+        </th>
         <th class="p-3">Actions</th>
       </tr>
     </thead>

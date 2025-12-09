@@ -5,6 +5,26 @@ import { setApiKey, clearApiKey } from './state.js';
 import { setApiKeyCookie, checkAuthStatus, getApiKeyFromCookie } from '../utils/auth.js';
 
 /**
+ * Hide the Action Icon Key when modals are shown
+ */
+export function hideActionIconKey() {
+    const actionKey = document.getElementById('action-key');
+    if (actionKey) {
+        actionKey.classList.add('hidden');
+    }
+}
+
+/**
+ * Show the Action Icon Key when modals are hidden
+ */
+export function showActionIconKey() {
+    const actionKey = document.getElementById('action-key');
+    if (actionKey) {
+        actionKey.classList.remove('hidden');
+    }
+}
+
+/**
  * Show the authentication modal
  */
 export function showAuthModal() {
@@ -12,6 +32,7 @@ export function showAuthModal() {
     if (modal) {
         modal.classList.remove('hidden');
         modal.classList.add('flex');
+        hideActionIconKey();
         // Focus the input field
         setTimeout(() => {
             const input = document.getElementById('auth-api-key');
@@ -30,6 +51,7 @@ export function hideAuthModal() {
     if (modal) {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
+        showActionIconKey();
     }
 }
 

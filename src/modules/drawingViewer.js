@@ -1,5 +1,6 @@
 import { appState } from "./state.js";
 import { getPartDrawingBlobUrl } from "../utils/partsApi.js";
+import { hideActionIconKey, showActionIconKey } from "./auth.js";
 
 let drawingObjectUrl = null;
 let currentPartId = null;
@@ -51,11 +52,13 @@ function hideElement(element) {
 function openModal(modal) {
   modal.classList.remove("hidden");
   modal.classList.add("flex");
+  hideActionIconKey();
 }
 
 function closeModal(modal) {
   modal.classList.add("hidden");
   modal.classList.remove("flex");
+  showActionIconKey();
 }
 
 function revokeDrawingUrl() {

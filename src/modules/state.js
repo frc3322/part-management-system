@@ -22,6 +22,11 @@ export const appState = {
   currentTab: "review",
   searchQuery: "",
   sortDirection: 1,
+  sortState: {
+    hand: { key: null, direction: 1 },
+    review: { key: null, direction: 1 },
+    completed: { key: null, direction: 1 },
+  },
   // Authentication state
   apiKey: null,
   isAuthenticated: false,

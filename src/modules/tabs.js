@@ -94,22 +94,81 @@ export function getCurrentTab() {
   return appState.currentTab;
 }
 
-/**
- * Sort hand fabrication table by a specific key
- * @param {string} key - The key to sort by
- */
-export async function sortTable(key) {
-  appState.sortDirection = appState.sortDirection === 1 ? -1 : 1;
+function getSortValue(part, key) {
+  if (key === "partId") return part.partId || part.id || part.name || "";
+  if (key === "name") return part.name || part.partId || part.id || "";
+  if (key === "assigned") return part.assigned || "";
+  if (key === "status") return part.status || "";
+  if (key === "subsystem") return part.subsystem || "";
+  if (key === "material") return part.material || "";
+  if (key === "type") return part.type || "";
+  if (key === "file") return part.file || "";
+  if (key === "notes") return part.notes || "";
+  if (key === "amount") {
+    const amount = Number(part.amount);
+    return Number.isFinite(amount) ? amount : 0;
+  }
+  return part[key] || "";
+}
 
-  appState.parts.hand.sort((a, b) => {
-    let valA = a[key] || "";
-    let valB = b[key] || "";
-    valA = valA.toString().toLowerCase();
-    valB = valB.toString().toLowerCase();
-    if (valA < valB) return -1 * appState.sortDirection;
-    if (valA > valB) return 1 * appState.sortDirection;
+function updateSortState(category, key) {
+  const current = appState.sortState?.[category] || { key: null, direction: 1 };
+  const direction = current.key === key ? current.direction * -1 : 1;
+  appState.sortState[category] = { key, direction };
+  appState.sortDirection = direction;
+  return direction;
+}
+
+function updateSortIndicators(category, activeKey, direction) {
+  const indicators = document.querySelectorAll(
+    `[data-sort-category="${category}"] .sort-icon`
+  );
+  indicators.forEach((icon) => {
+    const iconKey = icon.dataset.sortKey;
+    icon.classList.remove("fa-sort-up", "fa-sort-down", "text-blue-300");
+    icon.classList.add("fa-sort");
+    if (iconKey === activeKey) {
+      icon.classList.remove("fa-sort");
+      icon.classList.add(direction === 1 ? "fa-sort-up" : "fa-sort-down");
+      icon.classList.add("text-blue-300");
+    }
+  });
+}
+
+function sortParts(category, key, direction) {
+  const parts = appState.parts[category] || [];
+  parts.sort((a, b) => {
+    const valA = getSortValue(a, key);
+    const valB = getSortValue(b, key);
+    if (typeof valA === "number" && typeof valB === "number") {
+      return (valA - valB) * direction;
+    }
+    const normalizedA = valA.toString().toLowerCase();
+    const normalizedB = valB.toString().toLowerCase();
+    if (normalizedA < normalizedB) return -1 * direction;
+    if (normalizedA > normalizedB) return 1 * direction;
     return 0;
   });
+}
 
-  renderHandFab();
+function renderSortedCategory(category) {
+  if (category === "hand") {
+    renderHandFab();
+  } else if (category === "review") {
+    renderReview();
+  } else if (category === "completed") {
+    renderCompleted();
+  }
+}
+
+/**
+ * Sort a table by category and key
+ * @param {string} category - The tab category
+ * @param {string} key - The key to sort by
+ */
+export async function sortTable(category, key) {
+  const direction = updateSortState(category, key);
+  sortParts(category, key, direction);
+  updateSortIndicators(category, key, direction);
+  renderSortedCategory(category);
 }

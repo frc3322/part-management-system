@@ -6,12 +6,72 @@
   <table class="w-full text-left border-collapse">
     <thead>
       <tr class="text-blue-400 border-b border-gray-700">
-        <th class="p-3">Type</th>
+        <th
+          class="p-3 cursor-pointer hover:text-blue-300 transition"
+          data-sort-category="review"
+          data-sort-key="type"
+          onclick="sortTable('review', 'type')"
+        >
+          Type
+          <i
+            class="fa-solid fa-sort text-xs ml-1 sort-icon"
+            data-sort-category="review"
+            data-sort-key="type"
+          ></i>
+        </th>
         <th class="p-3">CAD</th>
-        <th class="p-3">ID / Name</th>
-        <th class="p-3">Subsystem</th>
-        <th class="p-3">Material</th>
-        <th class="p-3">File</th>
+        <th
+          class="p-3 cursor-pointer hover:text-blue-300 transition"
+          data-sort-category="review"
+          data-sort-key="partId"
+          onclick="sortTable('review', 'partId')"
+        >
+          ID / Name
+          <i
+            class="fa-solid fa-sort text-xs ml-1 sort-icon"
+            data-sort-category="review"
+            data-sort-key="partId"
+          ></i>
+        </th>
+        <th
+          class="p-3 cursor-pointer hover:text-blue-300 transition"
+          data-sort-category="review"
+          data-sort-key="subsystem"
+          onclick="sortTable('review', 'subsystem')"
+        >
+          Subsystem
+          <i
+            class="fa-solid fa-sort text-xs ml-1 sort-icon"
+            data-sort-category="review"
+            data-sort-key="subsystem"
+          ></i>
+        </th>
+        <th
+          class="p-3 cursor-pointer hover:text-blue-300 transition"
+          data-sort-category="review"
+          data-sort-key="material"
+          onclick="sortTable('review', 'material')"
+        >
+          Material
+          <i
+            class="fa-solid fa-sort text-xs ml-1 sort-icon"
+            data-sort-category="review"
+            data-sort-key="material"
+          ></i>
+        </th>
+        <th
+          class="p-3 cursor-pointer hover:text-blue-300 transition"
+          data-sort-category="review"
+          data-sort-key="file"
+          onclick="sortTable('review', 'file')"
+        >
+          File
+          <i
+            class="fa-solid fa-sort text-xs ml-1 sort-icon"
+            data-sort-category="review"
+            data-sort-key="file"
+          ></i>
+        </th>
         <th class="p-3">Notes</th>
         <th class="p-3">Actions</th>
       </tr>

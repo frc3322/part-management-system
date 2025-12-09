@@ -6,29 +6,81 @@
         <th class="p-3">CAD</th>
         <th
           class="p-3 cursor-pointer hover:text-blue-300 transition"
-          onclick="sortTable('id')"
+          data-sort-category="hand"
+          data-sort-key="partId"
+          onclick="sortTable('hand', 'partId')"
         >
-          ID <i class="fa-solid fa-sort text-xs ml-1"></i>
+          ID / Name
+          <i
+            class="fa-solid fa-sort text-xs ml-1 sort-icon"
+            data-sort-category="hand"
+            data-sort-key="partId"
+          ></i>
         </th>
         <th
           class="p-3 cursor-pointer hover:text-blue-300 transition"
-          onclick="sortTable('subsystem')"
+          data-sort-category="hand"
+          data-sort-key="subsystem"
+          onclick="sortTable('hand', 'subsystem')"
         >
-          Subsystem <i class="fa-solid fa-sort text-xs ml-1"></i>
+          Subsystem
+          <i
+            class="fa-solid fa-sort text-xs ml-1 sort-icon"
+            data-sort-category="hand"
+            data-sort-key="subsystem"
+          ></i>
         </th>
-        <th class="p-3">Material</th>
-        <th class="p-3">Amount</th>
         <th
           class="p-3 cursor-pointer hover:text-blue-300 transition"
-          onclick="sortTable('assigned')"
+          data-sort-category="hand"
+          data-sort-key="material"
+          onclick="sortTable('hand', 'material')"
         >
-          Assigned To <i class="fa-solid fa-sort text-xs ml-1"></i>
+          Material
+          <i
+            class="fa-solid fa-sort text-xs ml-1 sort-icon"
+            data-sort-category="hand"
+            data-sort-key="material"
+          ></i>
         </th>
         <th
           class="p-3 cursor-pointer hover:text-blue-300 transition"
-          onclick="sortTable('status')"
+          data-sort-category="hand"
+          data-sort-key="amount"
+          onclick="sortTable('hand', 'amount')"
         >
-          Status <i class="fa-solid fa-sort text-xs ml-1"></i>
+          Amount
+          <i
+            class="fa-solid fa-sort text-xs ml-1 sort-icon"
+            data-sort-category="hand"
+            data-sort-key="amount"
+          ></i>
+        </th>
+        <th
+          class="p-3 cursor-pointer hover:text-blue-300 transition"
+          data-sort-category="hand"
+          data-sort-key="assigned"
+          onclick="sortTable('hand', 'assigned')"
+        >
+          Assigned To
+          <i
+            class="fa-solid fa-sort text-xs ml-1 sort-icon"
+            data-sort-category="hand"
+            data-sort-key="assigned"
+          ></i>
+        </th>
+        <th
+          class="p-3 cursor-pointer hover:text-blue-300 transition"
+          data-sort-category="hand"
+          data-sort-key="status"
+          onclick="sortTable('hand', 'status')"
+        >
+          Status
+          <i
+            class="fa-solid fa-sort text-xs ml-1 sort-icon"
+            data-sort-category="hand"
+            data-sort-key="status"
+          ></i>
         </th>
         <th class="p-3">Notes</th>
         <th class="p-3">Actions</th>

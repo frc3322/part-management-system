@@ -5,6 +5,7 @@
 import { renderReview } from "./review.js";
 import { renderCNC } from "./cnc.js";
 import { renderHandFab } from "./handFab.js";
+import { hideActionIconKey, showActionIconKey } from "./auth.js";
 
 const MODAL_IDS = {
   review: "review-misc-modal",
@@ -90,6 +91,7 @@ function openReviewModal(context) {
   if (modal && reviewerInput && container) {
     modal.classList.remove("hidden");
     modal.classList.add("flex");
+    hideActionIconKey();
     reviewerInput.value = "";
     container.innerHTML = "";
     reviewerInput.focus();
@@ -101,6 +103,7 @@ function closeReviewModal() {
   if (modal) {
     modal.classList.add("hidden");
     modal.classList.remove("flex");
+    showActionIconKey();
   }
   reviewContext = null;
 }
@@ -184,9 +187,11 @@ function toggleInfoModal(show) {
   if (show) {
     modal.classList.remove("hidden");
     modal.classList.add("flex");
+    hideActionIconKey();
   } else {
     modal.classList.add("hidden");
     modal.classList.remove("flex");
+    showActionIconKey();
   }
 }
 

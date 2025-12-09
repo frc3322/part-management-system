@@ -7,6 +7,7 @@ import { renderCNC } from "./cnc.js";
 import { renderHandFab } from "./handFab.js";
 import { renderCompleted } from "./completed.js";
 import { openAddModal, handleCategoryChange } from "./modals.js";
+import { hideActionIconKey, showActionIconKey } from "./auth.js";
 import {
   approvePart as apiApprovePart,
   assignPart as apiAssignPart,
@@ -45,6 +46,7 @@ function openStorageModal(context) {
   pendingCompletionContext = context;
   modal.classList.remove("hidden");
   modal.classList.add("flex");
+  hideActionIconKey();
   input.value = "";
   input.focus();
   submitButton.disabled = false;
@@ -56,6 +58,7 @@ function closeStorageModal() {
   if (modal) {
     modal.classList.add("hidden");
     modal.classList.remove("flex");
+    showActionIconKey();
   }
   pendingCompletionContext = null;
 }
@@ -265,6 +268,7 @@ export async function markInProgress(tab, index, event) {
 
     modal.classList.remove("hidden");
     modal.classList.add("flex");
+    hideActionIconKey();
     setTimeout(() => document.getElementById("assign-input").focus(), 100);
     return;
   }
@@ -302,6 +306,7 @@ export function closeAssignModal() {
   const modal = document.getElementById("assign-modal");
   modal.classList.add("hidden");
   modal.classList.remove("flex");
+  showActionIconKey();
   pendingAssignmentIndex = null;
 }
 
@@ -335,6 +340,7 @@ export function unclaimPart(index) {
   const modal = document.getElementById("unclaim-modal");
   modal.classList.remove("hidden");
   modal.classList.add("flex");
+  hideActionIconKey();
 }
 
 export function viewPartInfo(tab, index) {
@@ -351,6 +357,7 @@ export function closeUnclaimModal() {
   const modal = document.getElementById("unclaim-modal");
   modal.classList.add("hidden");
   modal.classList.remove("flex");
+  showActionIconKey();
   pendingUnclaimIndex = null;
 }
 
@@ -394,6 +401,7 @@ function openCompleteAmountModal(context) {
   message.innerText = `This part requires ${context.part.amount}. Have you completed all units?`;
   modal.classList.remove("hidden");
   modal.classList.add("flex");
+  hideActionIconKey();
   confirmButton.disabled = false;
   cancelButton.disabled = false;
 }
@@ -403,6 +411,7 @@ export function closeCompleteAmountModal() {
   if (modal) {
     modal.classList.add("hidden");
     modal.classList.remove("flex");
+    showActionIconKey();
   }
   pendingAmountConfirmation = null;
 }

@@ -3,6 +3,7 @@
 
 import { appState } from "./state.js";
 import { saveTabVisibility } from "./persistence.js";
+import { hideActionIconKey, showActionIconKey } from "./auth.js";
 
 /**
  * Open the settings modal
@@ -11,6 +12,7 @@ export function openSettingsModal() {
   const modal = document.getElementById("settings-modal");
   modal.classList.remove("hidden");
   modal.classList.add("flex");
+  hideActionIconKey();
 }
 
 /**
@@ -20,6 +22,7 @@ export function closeSettingsModal() {
   const modal = document.getElementById("settings-modal");
   modal.classList.add("hidden");
   modal.classList.remove("flex");
+  showActionIconKey();
 }
 
 /**
@@ -82,6 +85,7 @@ export function openAddModal(isNew = false) {
 
   modal.classList.remove("hidden");
   modal.classList.add("flex");
+  hideActionIconKey();
 
   if (isNew) {
     document.getElementById("modal-title").innerText = "Add Part for Review";
@@ -110,6 +114,7 @@ export function openAddModal(isNew = false) {
 export function closeModal() {
   document.getElementById("modal").classList.add("hidden");
   document.getElementById("modal").classList.remove("flex");
+  showActionIconKey();
 }
 
 /**
