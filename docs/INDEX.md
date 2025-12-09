@@ -2,66 +2,65 @@
 
 ## Overview
 
-This documentation is organized into two complementary sections:
-
-1. **Concise Documentation** (`docs/`): Quick reference guides and overviews
-2. **Detailed Documentation** (`overviews/`): Comprehensive technical documentation
+This documentation provides comprehensive technical documentation for the Part Management System, organized by component and topic.
 
 ## Documentation Structure
 
-### Concise Docs (This Folder)
-- **README.md**: Project overview and quick start guide
-- **backend/**: Backend API summary and key components
-- **frontend/**: Frontend architecture overview and modules
-- **config/**: Configuration and deployment guide
-- **assets/**: Static assets documentation
+### Project Documentation
+- **README.md**: Project overview, quick start guide, and deployment instructions
+- **flow-overview.md**: System architecture and data flows
+- **INDEX.md**: This documentation index
 
-### Detailed Docs (overviews/ Folder)
-For in-depth technical documentation, refer to the `overviews/` folder:
+### Backend Documentation (`backend/`)
+- **overview.md**: Backend architecture summary and key components
+- **api-reference.md**: Quick API endpoints reference
+- **backend-overview.md**: Complete backend architecture and design
+- **backend-architecture.md**: Detailed backend system architecture
+- **backend-api.md**: Comprehensive API endpoints documentation
+- **backend-models.md**: Database models and schema details
+- **backend-config.md**: Configuration and deployment guide
+- **backend-utils.md**: Utilities, helpers, and validation
 
-#### Backend Documentation
-- `overviews/backend/backend-overview.md` - Complete backend architecture
-- `overviews/backend/backend-api.md` - Detailed API reference
-- `overviews/backend/backend-models.md` - Database schema and models
-- `overviews/backend/backend-config.md` - Configuration and deployment
-- `overviews/backend/backend-utils.md` - Utilities and helpers
+### Frontend Documentation (`frontend/`)
+- **overview.md**: Frontend architecture summary
+- **modules-reference.md**: Frontend modules quick reference
+- **overview.md**: Frontend system overview (detailed)
+- **architecture.md**: Frontend architecture details
+- **modules.md**: Complete module breakdown and documentation
+- **state-management.md**: State management system documentation
+- **ui-components.md**: UI components reference and usage
+- **utilities.md**: Frontend utility functions and helpers
 
-#### Frontend Documentation
-- `overviews/frontend/overview.md` - Frontend architecture
-- `overviews/frontend/modules.md` - Module breakdown
-- `overviews/frontend/state-management.md` - State management system
-- `overviews/frontend/ui-components.md` - UI components reference
-- `overviews/frontend/utilities.md` - Utility functions
+### Configuration Documentation (`config/`)
+- **overview.md**: Configuration and deployment guide
+
+### Assets Documentation (`assets/`)
+- **overview.md**: Static assets documentation
 
 ## Quick Reference
 
 ### Getting Started
-1. Read `docs/README.md` for project overview
-2. Follow setup instructions in the README
-3. Refer to `overviews/` for detailed implementation guides
+1. Read `README.md` for project overview and setup
+2. Follow installation and deployment instructions
+3. Refer to specific component documentation as needed
 
 ### Development Workflow
-- Use `docs/` for quick lookups and overviews
-- Consult `overviews/` for detailed technical specifications
-- Update both documentation sets when making changes
+- Use overview files for high-level understanding
+- Consult detailed component documentation for implementation specifics
+- Reference API documentation for integration points
 
 ### API Reference
-- `docs/backend/api-reference.md` - Quick API overview
-- `overviews/backend/backend-api.md` - Complete API documentation
+- `backend/api-reference.md` - Quick API overview
+- `backend/backend-api.md` - Complete API documentation
 
 ### Architecture
-- `docs/backend/overview.md` - Backend summary
-- `docs/frontend/overview.md` - Frontend summary
-- `overviews/` folders - Detailed architecture documentation
+- `flow-overview.md` - System-wide data flows and architecture
+- Component-specific overview and detailed documentation
 
 ## Maintenance
 
 When updating documentation:
-1. Update concise docs in `docs/` for quick reference
-2. Update detailed docs in `overviews/` for comprehensive coverage
-3. Keep both sets synchronized
-4. Update this index if adding new documentation sections
-
-## Legacy Documentation
-
-The `overviews/` folder contains the original comprehensive documentation set. This provides detailed technical specifications that complement the concise documentation in `docs/`. Both documentation sets are maintained and should be kept in sync.
+1. Update relevant overview files for quick reference
+2. Update detailed component documentation for comprehensive coverage
+3. Update this index if adding new documentation sections
+4. Keep cross-references accurate and current

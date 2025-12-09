@@ -90,7 +90,6 @@ part-management-system/
 │   ├── assets/             # Assets documentation
 │   └── utils/              # Utilities documentation
 ├── favicon/                # Web app icons
-├── overviews/              # Legacy documentation
 └── package.json            # Frontend dependencies
 ```
 

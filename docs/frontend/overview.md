@@ -1,125 +1,96 @@
-# Frontend Documentation
+# Part Management System - Source Code Overview
 
 ## Overview
 
-The frontend is a modern JavaScript single-page application that provides a web interface for managing manufacturing parts through a workflow system. It features a tabbed interface for different production stages and includes authentication, real-time updates, and 3D visualization capabilities.
+This document provides a comprehensive overview of the `src/` directory structure and organization for the Part Management System. This is a web-based application built with modern JavaScript, designed to manage engineering parts through their lifecycle from design review to completion.
 
-## Architecture
+## Directory Structure
 
-- **Framework**: Vanilla JavaScript with ES6 modules
+```
+src/
+├── main.js                 # Application entry point and initialization
+├── style.css              # Global styles and Tailwind configuration
+├── components/            # Reusable UI components
+│   └── threeDViewer.js    # 3D model visualization component (future)
+├── html/                  # HTML templates for UI sections
+│   ├── header.html        # Application header
+│   ├── tabs.html          # Navigation tabs
+│   ├── *-content.html     # Content templates for each tab
+│   └── *-modal.html       # Modal dialog templates
+├── modules/               # Core application logic (modular architecture)
+│   ├── auth.js            # Authentication management
+│   ├── state.js           # Central state management
+│   ├── tabs.js            # Tab navigation and switching
+│   ├── partActions.js     # Part manipulation operations
+│   ├── formHandler.js     # Form submission handling
+│   ├── modals.js          # Modal management
+│   ├── review.js          # Review tab logic
+│   ├── cnc.js             # CNC machining tab logic (includes STEP download)
+│   ├── handFab.js         # Hand fabrication tab logic
+│   └── completed.js       # Completed parts tab logic
+├── utils/                 # Utility functions
+│   └── partsApi.js        # API communication utilities
+└── components/            # Specialized components
+    └── threeDViewer.js    # 3D model visualization (future implementation)
+```
+
+## Architecture Overview
+
+The application follows a **modular architecture** with clear separation of concerns:
+
+- **Entry Point**: `main.js` initializes the application and sets up global event handlers
+- **State Management**: Centralized in `state.js` with typed data structures
+- **UI Components**: HTML templates in `html/` rendered dynamically by modules
+- **Business Logic**: Organized by feature in `modules/` directory
+- **Utilities**: Shared helper functions in `utils/` directory
+- **Components**: Specialized UI components like 3D viewers
+
+## Key Features
+
+- **Authentication System**: API key-based authentication with modal login
+- **Multi-tab Interface**: Review, CNC, Hand Fabrication, and Completed parts
+- **Part Lifecycle Management**: From design review through completion
+- **File Management**: STEP file upload and download capabilities
+- **Search and Filtering**: Global search across all parts
+- **3D Visualization**: Planned Three.js components for model viewing
+- **Responsive Design**: Modern neumorphic UI with Tailwind CSS
+- **Modal Management**: Dynamic forms and confirmation dialogs
+
+## Technology Stack
+
+- **Frontend**: Vanilla JavaScript (ES6+ modules)
 - **Styling**: Tailwind CSS with custom neumorphic design system
-- **State Management**: Centralized state object with reactive updates
-- **API Communication**: RESTful API client with authentication
-- **Build System**: Vite for development and bundling
+- **API Communication**: Fetch API with custom utilities
+- **Authentication**: Modal-based API key management
+- **File Handling**: Browser File API for uploads and downloads
+- **3D Graphics**: Three.js (planned for future implementation)
+- **Icons**: Font Awesome
+- **Build Tool**: Vite
 
-## Core Components
+## Development Notes
 
-### Application Structure (`main.js`)
-- **Entry Point**: Initializes the application and modules
-- **Authentication Flow**: Handles user authentication and modal management
-- **Global Exports**: Exports functions for HTML onclick handlers
-- **Tailwind Config**: Custom color palette and shadow effects
+- Uses ES6 modules for clean imports/exports
+- Follows Google-style docstrings for documentation
+- Implements TypeScript-style JSDoc type annotations
+- Modular design enables easy testing and maintenance
+- Authentication system integrated throughout the application
+- API communication abstracted into reusable utilities
+- No external state management libraries (vanilla JS approach)
 
-### State Management (`modules/state.js`)
-- **Central State**: Single source of truth for application data
-- **Categories**: review, cnc, hand, completed (workflow stages)
-- **Authentication State**: API key management and auth status
-- **Loading States**: UI feedback during data operations
-- **Reactive Updates**: Automatic re-rendering when state changes
+## Related Documentation
 
-### UI Components
+- [Architecture Details](architecture.md) - Deep dive into system architecture
+- [Modules Overview](modules.md) - Detailed breakdown of each module
+- [UI Components](ui-components.md) - HTML templates and interface components
+- [State Management](state-management.md) - How application state is handled
+- [Utilities](utilities.md) - Helper functions and utilities
 
-#### Tabs System (`html/tabs.html`, `modules/tabs.js`)
-- **Four Main Tabs**: Review, CNC/Laser, Hand Fabrication, Completed
-- **Search Functionality**: Real-time filtering across all parts
-- **Sorting**: Alphabetical and date-based sorting with toggle direction
-- **Active State Management**: Visual feedback for current tab
+## Getting Started
 
-#### Modals (`html/`, `modules/modals.js`)
-- **Add/Edit Modal**: Form for creating and editing parts
-- **Assign Modal**: User assignment interface
-- **Settings Modal**: Application configuration
-- **Auth Modal**: API key authentication
-- **Unclaim/Complete Modals**: Confirmation dialogs
+The application initializes through `main.js`, which:
+1. Sets up Tailwind configuration
+2. Imports all necessary modules
+3. Initializes application state with mock data
+4. Sets up global event handlers for UI interactions
 
-### Workflow Modules
-
-#### Review Module (`modules/review.js`)
-- **Part Approval**: Move parts from review to production stages
-- **Assignment**: Assign parts to team members
-- **Status Updates**: Track part progress
-
-#### CNC Module (`modules/cnc.js`)
-- **CNC-Specific Actions**: Download STEP files, mark in progress
-- **File Management**: Handle CAD file downloads and conversions
-- **Progress Tracking**: Update CNC machining status
-
-#### Hand Fabrication (`modules/handFab.js`)
-- **Manual Process Tracking**: Monitor hand-made parts
-- **Assignment Management**: Team member coordination
-- **Completion Marking**: Mark parts as finished
-
-#### Completed Module (`modules/completed.js`)
-- **Archive View**: Historical view of finished parts
-- **Reversal Actions**: Move parts back to active status if needed
-- **Statistics**: Completion metrics and reporting
-
-### Data Layer
-
-#### API Client (`utils/apiClient.js`)
-- **HTTP Methods**: GET, POST, PUT, DELETE with authentication
-- **Error Handling**: Comprehensive error management
-- **File Upload**: Multipart form data support
-- **Cookie Management**: Persistent authentication
-
-#### Parts API (`utils/partsApi.js`)
-- **CRUD Operations**: Complete part lifecycle management
-- **Search & Filtering**: Advanced query capabilities
-- **File Operations**: Upload, download, conversion
-- **Workflow Actions**: Approve, assign, complete, unclaim
-
-### Utilities
-
-#### Authentication (`utils/auth.js`)
-- **API Key Storage**: Secure cookie-based storage
-- **Validation**: Backend authentication verification
-- **Session Management**: Login/logout functionality
-
-#### Helpers (`utils/helpers.js`)
-- **Data Formatting**: Date, string, and number utilities
-- **UI Utilities**: DOM manipulation helpers
-- **Validation**: Form input validation
-
-## UI/UX Features
-
-### Design System
-- **Neumorphic Design**: 3D-like buttons and cards with shadows
-- **Dark Theme**: Modern dark color palette
-- **Responsive Layout**: Mobile-friendly design
-- **Custom Shadows**: Dynamic shadow effects for interactive elements
-
-### User Experience
-- **Real-time Search**: Instant filtering as you type
-- **Loading States**: Visual feedback during operations
-- **Error Handling**: User-friendly error messages
-- **Keyboard Navigation**: Accessible controls
-
-## Integration Points
-
-### Backend API
-- **RESTful Endpoints**: Full CRUD operations
-- **Authentication**: API key validation
-- **File Handling**: STEP file uploads and downloads
-- **3D Visualization**: GLTF conversion for web viewing
-
-### External Services
-- **Onshape Integration**: CAD model links
-- **File Conversion**: STEP to GLTF processing
-- **Authentication**: Secure API access
-
-## Development Features
-
-- **Hot Reload**: Vite development server
-- **ES6 Modules**: Modern JavaScript architecture
-- **Linting**: Code quality enforcement
-- **Modular Structure**: Organized, maintainable codebase
+See individual module documentation for implementation details.
