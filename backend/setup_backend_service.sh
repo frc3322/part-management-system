@@ -52,7 +52,7 @@ create_virtualenv() {
 }
 
 install_requirements() {
-  (cd "$project_root" && "$uv_bin" sync)
+  (cd "$backend_dir" && "$uv_bin" pip install -r "$backend_dir/requirements.txt")
 }
 
 write_service_file() {
