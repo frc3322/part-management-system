@@ -23,9 +23,45 @@ import {
 } from "../utils/partsApi.js";
 import { openReviewDetails, showPartInfo } from "./infoModals.js";
 
-let pendingCompletionContext = null;
+let pendingStorageContext = null;
 let pendingAmountConfirmation = null;
 let storageModalInitialized = false;
+
+const STORAGE_MODAL_MODES = {
+    complete: {
+        title: "Store Completed Part",
+        description: "Where did you store the part?",
+        submitLabel: "Save",
+        readOnly: false,
+    },
+    unclaim: {
+        title: "Where is the part stored?",
+        description: "Save the storage location before unclaiming.",
+        submitLabel: "Save and unclaim",
+        readOnly: false,
+    },
+    claimInfo: {
+        title: "Stored Location",
+        description: "Retrieve the part from this location.",
+        submitLabel: "Continue",
+        readOnly: true,
+    },
+};
+
+function getStorageLocation(part) {
+    if (!part) return "";
+    const misc = part.miscInfo || part.misc_info || {};
+    return misc.storage || "";
+}
+
+function buildMiscWithStorage(part, location) {
+    const baseMisc = part?.miscInfo || part?.misc_info || {};
+    const trimmedLocation = location?.trim();
+    if (trimmedLocation) {
+        return { ...baseMisc, storage: trimmedLocation };
+    }
+    return { ...baseMisc };
+}
 
 function initStorageModal() {
     if (storageModalInitialized) return;
@@ -43,18 +79,34 @@ function openStorageModal(context) {
     const input = document.getElementById("storage-location-input");
     const submitButton = document.getElementById("storage-submit");
     const cancelButton = document.getElementById("storage-cancel");
+    const titleElement = document.getElementById("storage-modal-title");
+    const descriptionElement = document.getElementById(
+        "storage-modal-description"
+    );
     if (!modal || !input || !submitButton || !cancelButton) {
         alert("Storage modal is unavailable. Please try again.");
         return;
     }
-    pendingCompletionContext = context;
+    const mode = context?.mode || "complete";
+    const config = STORAGE_MODAL_MODES[mode] || STORAGE_MODAL_MODES.complete;
+    const initialValue =
+        context?.initialValue ||
+        (mode === "complete" ? "" : getStorageLocation(context?.part));
+    pendingStorageContext = { ...context, mode };
+    if (titleElement) titleElement.innerText = config.title;
+    if (descriptionElement) descriptionElement.innerText = config.description;
+    submitButton.innerText = config.submitLabel;
+    input.value = initialValue || "";
+    input.readOnly = Boolean(config.readOnly);
+    input.disabled = false;
+    submitButton.disabled = false;
+    cancelButton.disabled = false;
     modal.classList.remove("hidden");
     modal.classList.add("flex");
     hideActionIconKey();
-    input.value = "";
-    input.focus();
-    submitButton.disabled = false;
-    cancelButton.disabled = false;
+    if (!config.readOnly) {
+        input.focus();
+    }
 }
 
 function closeStorageModal() {
@@ -64,7 +116,7 @@ function closeStorageModal() {
         modal.classList.remove("flex");
         showActionIconKey();
     }
-    pendingCompletionContext = null;
+    pendingStorageContext = null;
 }
 
 function setStorageModalLoading(isLoading) {
@@ -76,38 +128,60 @@ function setStorageModalLoading(isLoading) {
 
 async function handleStorageSubmit(event) {
     event.preventDefault();
-    if (!pendingCompletionContext) {
+    if (!pendingStorageContext) {
         closeStorageModal();
         return;
     }
-    const { part, fromTab, index, triggerButton } = pendingCompletionContext;
+    const {
+        part,
+        fromTab,
+        index,
+        triggerButton,
+        mode = "complete",
+        onContinue,
+    } = pendingStorageContext;
     const input = document.getElementById("storage-location-input");
     if (!input) {
         closeStorageModal();
         return;
     }
-    const location = input.value?.trim();
-    const baseMisc = part.miscInfo || part.misc_info || {};
-    const mergedMisc =
-        location && location !== ""
-            ? { ...baseMisc, storage: location }
-            : { ...baseMisc };
+    const rawLocation = input.value?.trim();
+    const storageLocation =
+        rawLocation && rawLocation !== "" ? rawLocation : getStorageLocation(part);
+    const mergedMisc = buildMiscWithStorage(part, storageLocation);
     const payload =
         Object.keys(mergedMisc).length > 0 ? { miscInfo: mergedMisc } : {};
+    if (mode === "unclaim" && !storageLocation) {
+        alert("Please provide the storage location before unclaiming.");
+        return;
+    }
     try {
-        setStorageModalLoading(true);
-        if (triggerButton) triggerButton.disabled = true;
-        const completedPart = await apiCompletePart(part.id, payload);
-        updatePartInState(part.id, completedPart);
-        if (fromTab === "cnc") renderCNC();
-        else renderHandFab();
-        renderCompleted();
+        const shouldShowLoading = mode !== "claimInfo";
+        if (shouldShowLoading) setStorageModalLoading(true);
+        if (triggerButton && shouldShowLoading) triggerButton.disabled = true;
+        if (mode === "complete") {
+            const completedPart = await apiCompletePart(part.id, payload);
+            updatePartInState(part.id, completedPart);
+            if (fromTab === "cnc") renderCNC();
+            else renderHandFab();
+            renderCompleted();
+        } else if (mode === "unclaim") {
+            await apiUpdatePart(part.id, payload);
+            const unclaimedPart = await apiUnclaimPart(part.id);
+            updatePartInState(part.id, unclaimedPart);
+            renderHandFab();
+        } else if (mode === "claimInfo") {
+            if (typeof onContinue === "function") {
+                onContinue();
+            }
+        }
     } catch (error) {
-        console.error("Failed to complete part with storage location:", error);
+        console.error("Failed to handle storage action:", error);
         alert("Failed to save storage location. Please try again.");
     } finally {
-        setStorageModalLoading(false);
-        if (triggerButton) triggerButton.disabled = false;
+        const shouldShowLoading = mode !== "claimInfo";
+        if (shouldShowLoading) setStorageModalLoading(false);
+        if (triggerButton && shouldShowLoading) triggerButton.disabled = false;
         closeStorageModal();
     }
 }
@@ -256,24 +330,15 @@ export async function markInProgress(tab, index, event) {
     const part = appState.parts[tab][index];
 
     if (tab === "hand" && (!part.assigned || part.assigned === "")) {
-        // Open assignment modal for hand fabrication parts
-        pendingAssignmentIndex = index;
-        document.getElementById("assign-input").value = "";
-        const modal = document.getElementById("assign-modal");
-        const warning = document.getElementById("assign-warning");
-
-        if (part.status === "Already Started") {
-            warning.classList.remove("hidden");
-            warning.classList.add("flex");
+        const hasStoredLocation = Boolean(getStorageLocation(part));
+        if (hasStoredLocation) {
+            openAssignModal(part, index, {
+                showStorageOnAssign: true,
+                storageLocation: getStorageLocation(part),
+            });
         } else {
-            warning.classList.add("hidden");
-            warning.classList.remove("flex");
+            openAssignModal(part, index);
         }
-
-        modal.classList.remove("hidden");
-        modal.classList.add("flex");
-        hideActionIconKey();
-        setTimeout(() => document.getElementById("assign-input").focus(), 100);
         return;
     }
 
@@ -302,16 +367,54 @@ export async function markInProgress(tab, index, event) {
 
 // Assignment Modal Management
 let pendingAssignmentIndex = null;
+let pendingAssignShowStorageLocation = false;
+let pendingAssignStorageLocation = "";
+
+function openAssignModal(part, index, options = {}) {
+    pendingAssignmentIndex = index;
+    pendingAssignShowStorageLocation = Boolean(options.showStorageOnAssign);
+    pendingAssignStorageLocation =
+        options.storageLocation || getStorageLocation(part) || "";
+    const assignInput = document.getElementById("assign-input");
+    const modal = document.getElementById("assign-modal");
+    const warning = document.getElementById("assign-warning");
+    if (assignInput) assignInput.value = "";
+    if (warning) {
+        if (part.status === "Already Started") {
+            warning.classList.remove("hidden");
+            warning.classList.add("flex");
+        } else {
+            warning.classList.add("hidden");
+            warning.classList.remove("flex");
+        }
+    }
+    if (modal) {
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        hideActionIconKey();
+    }
+    if (assignInput) {
+        setTimeout(() => assignInput.focus(), 100);
+    }
+}
 
 /**
  * Close the assignment modal
  */
 export function closeAssignModal() {
+    closeAssignModalInternal(false);
+}
+
+function closeAssignModalInternal(skipShowActionIcon) {
     const modal = document.getElementById("assign-modal");
     modal.classList.add("hidden");
     modal.classList.remove("flex");
-    showActionIconKey();
+    if (!skipShowActionIcon) {
+        showActionIconKey();
+    }
     pendingAssignmentIndex = null;
+    pendingAssignShowStorageLocation = false;
+    pendingAssignStorageLocation = "";
 }
 
 /**
@@ -327,7 +430,19 @@ export async function confirmAssignment() {
             updatePartInState(part.id, updatedPart);
 
             renderHandFab();
-            closeAssignModal();
+            const shouldShowStorage =
+                pendingAssignShowStorageLocation &&
+                Boolean(pendingAssignStorageLocation);
+            closeAssignModalInternal(shouldShowStorage);
+            if (shouldShowStorage) {
+                openStorageModal({
+                    mode: "claimInfo",
+                    part: updatedPart,
+                    fromTab: "hand",
+                    index: pendingAssignmentIndex,
+                    initialValue: pendingAssignStorageLocation,
+                });
+            }
         } catch (error) {
             console.error("Failed to assign part:", error);
             alert("Failed to assign part. Please try again.");
@@ -371,17 +486,16 @@ export function closeUnclaimModal() {
 export async function confirmUnclaim() {
     if (pendingUnclaimIndex !== null) {
         const part = appState.parts.hand[pendingUnclaimIndex];
-
-        try {
-            const updatedPart = await apiUnclaimPart(part.id);
-            updatePartInState(part.id, updatedPart);
-
-            renderHandFab();
-            closeUnclaimModal();
-        } catch (error) {
-            console.error("Failed to unclaim part:", error);
-            alert("Failed to unclaim part. Please try again.");
-        }
+        const storageLocation = getStorageLocation(part);
+        const index = pendingUnclaimIndex;
+        closeUnclaimModal();
+        openStorageModal({
+            mode: "unclaim",
+            part,
+            fromTab: "hand",
+            index,
+            initialValue: storageLocation,
+        });
     }
 }
 
