@@ -32,6 +32,7 @@ import {
     setModalLoading,
 } from "../../core/dom/modalManager.js";
 import { withErrorHandling } from "../../core/api/apiErrorHandler.js";
+import { showErrorNotification, showWarningNotification, showInfoNotification } from "../../core/dom/notificationManager.js";
 import { celebrateCompletion } from "../../utils/confetti.js";
 
 let pendingStorageContext = null;
@@ -94,7 +95,7 @@ function openStorageModal(context) {
         "storage-modal-description"
     );
     if (!input || !submitButton || !cancelButton) {
-        alert("Storage modal is unavailable. Please try again.");
+        showErrorNotification("Storage Error", "Storage modal is unavailable. Please try again.");
         return;
     }
     const mode = context?.mode || "complete";
@@ -159,7 +160,7 @@ async function handleStorageSubmit(event) {
     const payload =
         Object.keys(mergedMisc).length > 0 ? { miscInfo: mergedMisc } : {};
     if (mode === "unclaim" && !storageLocation) {
-        alert("Please provide the storage location before unclaiming.");
+        showWarningNotification("Storage Required", "Please provide the storage location before unclaiming.");
         return;
     }
     const shouldShowLoading = mode !== "claimInfo";
@@ -189,7 +190,7 @@ async function handleStorageSubmit(event) {
         },
         {
             onError: () =>
-                alert("Failed to save storage location. Please try again."),
+                showErrorNotification("Storage Error", "Failed to save storage location. Please try again."),
             onFinally: () => {
                 if (shouldShowLoading) setStorageModalLoading(false);
                 if (triggerButton && shouldShowLoading)
@@ -235,7 +236,7 @@ export async function markUncompleted(index, event) {
         },
         {
             loadingTargets: button,
-            onError: () => alert("Failed to revert part. Please try again."),
+            onError: () => showErrorNotification("Revert Failed", "Failed to revert part. Please try again."),
         }
     );
 }
@@ -325,7 +326,7 @@ export async function deletePart(tab, index, event) {
             {
                 loadingTargets: button,
                 onError: () =>
-                    alert("Failed to delete part. Please try again."),
+                    showErrorNotification("Delete Failed", "Failed to delete part. Please try again."),
             }
         );
     }
@@ -366,7 +367,7 @@ export async function markInProgress(tab, index, event) {
         {
             loadingTargets: button,
             onError: () =>
-                alert("Failed to update part status. Please try again."),
+                showErrorNotification("Status Update Failed", "Failed to update part status. Please try again."),
         }
     );
 }
@@ -461,7 +462,7 @@ export async function confirmAssignment() {
             },
             {
                 onError: () =>
-                    alert("Failed to assign part. Please try again."),
+                    showErrorNotification("Assignment Failed", "Failed to assign part. Please try again."),
             }
         );
     }

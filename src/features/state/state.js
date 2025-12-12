@@ -2,6 +2,7 @@
 // Manages all application state and provides state-related utilities
 
 import { getParts, getStats } from "../../core/api/partsApi.js";
+import { showErrorNotification } from "../../core/dom/notificationManager.js";
 import { renderReview } from "../tabs/review.js";
 import { renderCNC } from "../tabs/cnc.js";
 import { renderHandFab } from "../tabs/handFab.js";
@@ -183,8 +184,9 @@ export async function initializeState() {
         await loadStats();
     } catch (error) {
         console.error("Failed to initialize state:", error);
-        // Show error to user - could add toast notification here
-        alert(
+        // Show error to user
+        showErrorNotification(
+            "Connection Error",
             "Failed to load data from server. Please check your connection and try again."
         );
     } finally {

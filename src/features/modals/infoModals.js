@@ -7,6 +7,7 @@ import { renderCNC } from "../tabs/cnc.js";
 import { renderHandFab } from "../tabs/handFab.js";
 import { hideActionIconKey, showActionIconKey } from "../auth/auth.js";
 import { appState } from "../state/state.js";
+import { showErrorNotification } from "../../core/dom/notificationManager.js";
 
 const MODAL_IDS = {
     review: "review-misc-modal",
@@ -170,7 +171,10 @@ async function handleReviewSubmit(event) {
         console.log("[handleReviewSubmit] Done rendering");
     } catch (error) {
         console.error("Failed to submit review details", error);
-        alert("Failed to save review details. Please try again.");
+        showErrorNotification(
+            "Save Failed",
+            "Failed to save review details. Please try again."
+        );
     }
 }
 

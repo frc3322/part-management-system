@@ -1,6 +1,7 @@
 import { appState } from "../state/state.js";
 import { getPartDrawingBlobUrl } from "../../core/api/partsApi.js";
 import { hideActionIconKey, showActionIconKey } from "../auth/auth.js";
+import { showInfoNotification } from "../../core/dom/notificationManager.js";
 
 let drawingObjectUrl = null;
 let currentPartId = null;
@@ -104,7 +105,7 @@ export function closeDrawingModal() {
 async function loadDrawing(partId, useRefresh) {
     const elements = getViewerElements();
     if (!elements) {
-        alert("Drawing viewer is unavailable.");
+        showInfoNotification("Drawing Viewer", "Drawing viewer is unavailable.");
         return;
     }
 
@@ -147,17 +148,17 @@ async function loadDrawing(partId, useRefresh) {
 export async function viewHandDrawing(index) {
     const part = appState.parts.hand[index];
     if (!part) {
-        alert("Part not found.");
+        showInfoNotification("Drawing Viewer", "Part not found.");
         return;
     }
     if (!part.onshapeUrl) {
-        alert("No drawing URL for this part.");
+        showInfoNotification("Drawing Viewer", "No drawing URL for this part.");
         return;
     }
 
     const elements = getViewerElements();
     if (!elements) {
-        alert("Drawing viewer is unavailable.");
+        showInfoNotification("Drawing Viewer", "Drawing viewer is unavailable.");
         return;
     }
 
@@ -171,12 +172,12 @@ export async function viewHandDrawing(index) {
 
 export async function refreshDrawing() {
     if (!currentPartId) {
-        alert("Open a drawing first.");
+        showInfoNotification("Drawing Viewer", "Open a drawing first.");
         return;
     }
     const part = findHandPartById(currentPartId);
     if (!part) {
-        alert("Part not found.");
+        showInfoNotification("Drawing Viewer", "Part not found.");
         return;
     }
     await loadDrawing(part.id, true);

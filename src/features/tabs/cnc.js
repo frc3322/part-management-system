@@ -2,6 +2,7 @@
 // Handles the CNC tab display and functionality
 
 import { appState } from "../state/state.js";
+import { showErrorNotification } from "../../core/dom/notificationManager.js";
 import { getState } from "../../core/state/reactiveState.js";
 import {
     filterParts,
@@ -285,7 +286,7 @@ export async function downloadStepFile(partId, filename) {
         await downloadPartFile(partId, filename);
     } catch (error) {
         console.error("Failed to download file:", error);
-        alert("Failed to download file. Please try again.");
+        showErrorNotification("Download Failed", "Failed to download file. Please try again.");
     }
 }
 
