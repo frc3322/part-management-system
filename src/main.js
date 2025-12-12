@@ -44,6 +44,7 @@ import {
     openSettingsModal,
     closeSettingsModal,
     toggleTabVisibility,
+    toggleDisable3JS,
     openAddModal,
     closeModal,
     handleCategoryChange,
@@ -58,6 +59,7 @@ import {
     deletePart,
     markInProgress,
     confirmAssignment,
+    handleAssignKeyup,
     closeAssignModal,
     unclaimPart,
     closeUnclaimModal,
@@ -66,11 +68,12 @@ import {
     confirmCompleteAmount,
     viewPartInfo,
 } from "./features/parts/partActions.js";
-import { handleFormSubmit } from "./features/forms/formHandler.js";
+import { handleFormSubmit, handleFormKeyup } from "./features/forms/formHandler.js";
 import {
     initializeAuthModal,
     showAuthModal,
     handleAuthSubmit,
+    handleAuthKeyup,
     checkAuthentication,
     hideAuthModal,
 } from "./features/auth/auth.js";
@@ -269,6 +272,7 @@ const actionExports = {
     openSettingsModal,
     closeSettingsModal,
     toggleTabVisibility,
+    toggleDisable3JS,
     handleSearch,
     switchTab,
     openAddModal,
@@ -277,6 +281,7 @@ const actionExports = {
     handleMaterialChange,
     updateFileName,
     handleFormSubmit,
+    handleFormKeyup,
     markCompleted,
     markUncompleted,
     approvePart,
@@ -284,6 +289,7 @@ const actionExports = {
     deletePart,
     markInProgress,
     confirmAssignment,
+    handleAssignKeyup,
     closeAssignModal,
     unclaimPart,
     closeUnclaimModal,
@@ -300,6 +306,7 @@ const actionExports = {
     showAuthModal,
     hideAuthModal,
     handleAuthSubmit,
+    handleAuthKeyup,
     downloadStepFile,
 };
 

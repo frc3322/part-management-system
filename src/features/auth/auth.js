@@ -122,6 +122,16 @@ function resetAuthForm() {
 }
 
 /**
+ * Handle Enter key press in the auth input field
+ * @param {Event} event - Keyup event from event delegation
+ */
+export function handleAuthKeyup(event) {
+    if (event.key === "Enter") {
+        handleAuthSubmit(event);
+    }
+}
+
+/**
  * Handle authentication form submission
  * @param {Event} event - Button click event from event delegation
  */

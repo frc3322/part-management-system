@@ -193,6 +193,16 @@ function performPostSubmitActions() {
 }
 
 /**
+ * Handle Enter key press in form inputs
+ * @param {Event} event - Keyup event from event delegation
+ */
+export function handleFormKeyup(event) {
+    if (event.key === "Enter") {
+        handleFormSubmit(event);
+    }
+}
+
+/**
  * Handle form submission
  * @param {Event} e - The form submission event
  */

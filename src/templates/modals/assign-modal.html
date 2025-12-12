@@ -21,7 +21,7 @@
             Please enter your name to start working on this part.
         </p>
 
-        <form data-action="confirmAssignment">
+        <form>
             <div class="mb-6">
                 <label class="block text-sm font-bold mb-2 text-gray-400"
                     >Your Name</label
@@ -29,6 +29,7 @@
                 <input
                     type="text"
                     id="assign-input"
+                    data-action="handleAssignKeyup"
                     class="neumorphic-input w-full p-3 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-400"
                     required
                 />
@@ -44,6 +45,7 @@
                 </button>
                 <button
                     type="submit"
+                    data-action="confirmAssignment"
                     class="neumorphic-btn px-8 py-2 rounded-lg text-blue-400 font-bold"
                 >
                     Start Work

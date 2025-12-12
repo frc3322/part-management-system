@@ -411,6 +411,16 @@ function closeAssignModalInternal(skipShowActionIcon) {
 }
 
 /**
+ * Handle Enter key press in assign input
+ * @param {Event} event - Keyup event from event delegation
+ */
+export function handleAssignKeyup(event) {
+    if (event.key === "Enter") {
+        confirmAssignment();
+    }
+}
+
+/**
  * Confirm assignment and mark part as in progress
  */
 export async function confirmAssignment() {
