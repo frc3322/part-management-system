@@ -1,4 +1,4 @@
-# Part Management System - Backend Architecture
+# Aerie Part Management - Backend Architecture
 
 ## System Architecture Overview
 

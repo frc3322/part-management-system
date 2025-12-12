@@ -1,8 +1,8 @@
-# Part Management System - Backend API Reference
+# Aerie Part Management - Backend API Reference
 
 ## API Overview
 
-The Part Management System backend provides a comprehensive REST API for managing engineering parts through their complete lifecycle. The API follows RESTful principles with consistent resource naming, HTTP methods, and response formats.
+Aerie Part Management backend provides a comprehensive REST API for managing engineering parts through their complete lifecycle. The API follows RESTful principles with consistent resource naming, HTTP methods, and response formats.
 
 ## Base URL
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Part Management System supports multiple deployment configurations for different environments (development, testing, production) with flexible configuration management through environment variables, JSON config files, and deployment scripts.
+Aerie Part Management supports multiple deployment configurations for different environments (development, testing, production) with flexible configuration management through environment variables, JSON config files, and deployment scripts.
 
 ## Configuration System
 
@@ -96,7 +96,7 @@ uv run python deploy.py prod-multi --port 5000
 **Service Configuration:**
 ```ini
 [Unit]
-Description=Part Management System Backend
+Description=Aerie Part Management Backend
 After=network.target
 
 [Service]

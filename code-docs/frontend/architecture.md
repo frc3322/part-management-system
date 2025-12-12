@@ -1,8 +1,8 @@
-# Part Management System - Architecture Overview
+# Aerie Part Management - Architecture Overview
 
 ## System Architecture
 
-The Part Management System employs a **modular, component-based architecture** built with vanilla JavaScript ES6 modules. The design emphasizes separation of concerns, maintainability, and scalability.
+Aerie Part Management employs a **modular, component-based architecture** built with vanilla JavaScript ES6 modules. The design emphasizes separation of concerns, maintainability, and scalability.
 
 ## Core Principles
 

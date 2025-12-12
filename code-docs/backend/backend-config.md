@@ -1,4 +1,4 @@
-# Part Management System - Backend Configuration
+# Aerie Part Management - Backend Configuration
 
 ## Overview
 

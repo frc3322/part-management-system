@@ -1,4 +1,4 @@
-# Part Management System - Flow Overview
+# Aerie Part Management - Flow Overview
 
 > Visual flows with consistent color themes and quick-reading legends.
 

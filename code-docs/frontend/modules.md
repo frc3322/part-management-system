@@ -1,4 +1,4 @@
-# Part Management System - Modules Overview
+# Aerie Part Management - Modules Overview
 
 ## Module Organization
 

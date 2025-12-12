@@ -2,7 +2,7 @@
 
 ## Overview
 
-This documentation provides comprehensive technical documentation for the Part Management System, organized by component and topic.
+This documentation provides comprehensive technical documentation for Aerie Part Management, organized by component and topic.
 
 ## Documentation Structure
 

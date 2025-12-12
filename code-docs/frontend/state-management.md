@@ -1,8 +1,8 @@
-# Part Management System - State Management Overview
+# Aerie Part Management - State Management Overview
 
 ## State Architecture
 
-The Part Management System uses a **reactive state management** approach implemented in vanilla JavaScript. The system combines a centralized state object with an observer pattern that automatically triggers UI updates when state changes. This provides the benefits of reactive frameworks without external dependencies.
+Aerie Part Management uses a **reactive state management** approach implemented in vanilla JavaScript. The system combines a centralized state object with an observer pattern that automatically triggers UI updates when state changes. This provides the benefits of reactive frameworks without external dependencies.
 
 ## Core State Structure
 

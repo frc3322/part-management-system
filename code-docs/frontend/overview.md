@@ -1,8 +1,8 @@
-# Part Management System - Source Code Overview
+# Aerie Part Management - Source Code Overview
 
 ## Overview
 
-This document provides a comprehensive overview of the `src/` directory structure and organization for the Part Management System. This is a web-based application built with modern JavaScript, designed to manage engineering parts through their lifecycle from design review to completion.
+This document provides a comprehensive overview of the `src/` directory structure and organization for Aerie Part Management. This is a web-based application built with modern JavaScript, designed to manage engineering parts through their lifecycle from design review to completion.
 
 ## Directory Structure
 
@@ -97,7 +97,7 @@ See individual module documentation for implementation details.
 
 ## Adding New Functionality
 
-This section provides a step-by-step guide for adding new features to the Part Management System using the modernized architecture.
+This section provides a step-by-step guide for adding new features to Aerie Part Management using the modernized architecture.
 
 ### Architecture Overview for New Features
 

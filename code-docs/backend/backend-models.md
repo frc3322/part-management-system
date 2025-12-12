@@ -1,4 +1,4 @@
-# Part Management System - Database Models
+# Aerie Part Management - Database Models
 
 ## Overview
 

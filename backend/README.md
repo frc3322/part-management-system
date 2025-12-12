@@ -1,4 +1,4 @@
-# Part Management System - Backend
+# Aerie Part Management - Backend
 
 A Flask-based REST API backend for the Part Management System, providing comprehensive part lifecycle management through a clean, database-driven architecture.
 

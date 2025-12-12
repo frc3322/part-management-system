@@ -1,8 +1,8 @@
-# Part Management System - Backend Overview
+# Aerie Part Management - Backend Overview
 
 ## Overview
 
-This document provides a comprehensive overview of the backend architecture for the Part Management System, a Flask-based REST API that provides complete part lifecycle management and database persistence for the frontend application.
+This document provides a comprehensive overview of the backend architecture for Aerie Part Management, a Flask-based REST API that provides complete part lifecycle management and database persistence for the frontend application.
 
 ## System Architecture
 

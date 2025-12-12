@@ -1,4 +1,4 @@
-# Part Management System - Utilities Overview
+# Aerie Part Management - Utilities Overview
 
 ## Utility Functions Architecture
 
@@ -1129,4 +1129,4 @@ export function timeFunction(func, ...args) {
 }
 ```
 
-This completes the comprehensive overview of the Part Management System's source code structure and organization.
+This completes the comprehensive overview of Aerie Part Management's source code structure and organization.

@@ -1,8 +1,8 @@
-# Part Management System Documentation
+# Aerie Part Management Documentation
 
 ## Overview
 
-The Part Management System is a web-based application for managing manufacturing parts through a workflow system. It supports the complete lifecycle of parts from initial design review through CNC machining, hand fabrication, and completion tracking.
+Aerie Part Management is a web-based application for managing manufacturing parts through a workflow system. It supports the complete lifecycle of parts from initial design review through CNC machining, hand fabrication, and completion tracking.
 
 ## Architecture
 

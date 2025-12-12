@@ -2,7 +2,7 @@
 
 ## Overview
 
-The assets folder contains static files and resources used by the Part Management System, primarily focusing on favicon and icon assets for web browsers and mobile devices.
+The assets folder contains static files and resources used by Aerie Part Management, primarily focusing on favicon and icon assets for web browsers and mobile devices.
 
 ## Favicon Assets
 

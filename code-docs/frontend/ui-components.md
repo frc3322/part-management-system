@@ -1,4 +1,4 @@
-# Part Management System - UI Components Overview
+# Aerie Part Management - UI Components Overview
 
 ## HTML Template Structure
 
