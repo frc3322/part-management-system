@@ -2,11 +2,11 @@
 
 import os
 import logging
-from flask import Flask, request, send_from_directory
-from flask_cors import CORS
-from sqlalchemy import inspect, text
-from sqlalchemy.exc import OperationalError
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, request, send_from_directory  # type: ignore
+from flask_cors import CORS  # type: ignore
+from sqlalchemy import inspect, text  # type: ignore
+from sqlalchemy.exc import OperationalError  # type: ignore
+from flask_sqlalchemy import SQLAlchemy  # type: ignore
 from config import config  # type: ignore
 from models import db  # type: ignore
 from routes import parts_bp  # type: ignore

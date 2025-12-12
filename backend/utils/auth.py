@@ -1,6 +1,6 @@
 """Authentication utilities for the Part Management System."""
 
-from flask import request, jsonify, current_app
+from flask import request, jsonify, current_app  # type: ignore
 from functools import wraps
 
 
@@ -15,22 +15,27 @@ def require_secret_key(f):
     Returns:
         JSON error response if key is missing or invalid
     """
+
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        secret_key = current_app.config['SECRET_KEY']
+        secret_key = current_app.config["SECRET_KEY"]
         provided_key = _get_api_key_from_request()
 
         if not provided_key:
-            return jsonify({
-                'error': 'API key required',
-                'details': 'Provide X-API-Key header, api_key query parameter, or api_key in request body'
-            }), 401
+            return jsonify(
+                {
+                    "error": "API key required",
+                    "details": "Provide X-API-Key header, api_key query parameter, or api_key in request body",
+                }
+            ), 401
 
         if provided_key != secret_key:
-            return jsonify({
-                'error': 'Invalid API key',
-                'details': 'The provided API key is not valid'
-            }), 401
+            return jsonify(
+                {
+                    "error": "Invalid API key",
+                    "details": "The provided API key is not valid",
+                }
+            ), 401
 
         return f(*args, **kwargs)
 
@@ -44,21 +49,21 @@ def _get_api_key_from_request():
         str or None: The API key if found, None otherwise
     """
     # Check X-API-Key header
-    api_key = request.headers.get('X-API-Key')
+    api_key = request.headers.get("X-API-Key")
     if api_key:
         return api_key
 
     # Check query parameter
-    api_key = request.args.get('api_key')
+    api_key = request.args.get("api_key")
     if api_key:
         return api_key
 
     # Check JSON body for POST/PUT requests
-    if request.is_json and request.method in ['POST', 'PUT']:
+    if request.is_json and request.method in ["POST", "PUT"]:
         try:
             data = request.get_json(silent=True)
-            if data and 'api_key' in data:
-                return data['api_key']
+            if data and "api_key" in data:
+                return data["api_key"]
         except Exception:
             pass
 

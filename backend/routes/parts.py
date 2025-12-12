@@ -4,9 +4,9 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
-from werkzeug.utils import secure_filename
-from flask import Blueprint, request, jsonify, current_app, send_file
-from sqlalchemy import or_, desc, asc
+from werkzeug.utils import secure_filename  # type: ignore
+from flask import Blueprint, request, jsonify, current_app, send_file  # type: ignore
+from sqlalchemy import or_, desc, asc  # type: ignore
 from models.part import Part, db  # type: ignore
 from utils.auth import require_secret_key  # type: ignore
 from utils.onshape_drawing import build_onshape_client  # type: ignore
@@ -558,7 +558,7 @@ def get_parts_by_category(category):
         args["category"] = category
 
         # Create a new request context with modified args
-        from werkzeug.datastructures import ImmutableMultiDict
+        from werkzeug.datastructures import ImmutableMultiDict  # type: ignore
 
         request.args = ImmutableMultiDict(args)
 

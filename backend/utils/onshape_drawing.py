@@ -7,7 +7,7 @@ import time
 from pathlib import Path
 from typing import Dict, Tuple
 
-import requests
+import requests  # type: ignore
 
 try:  # Prefer absolute import for script execution
     from config import load_config_from_json  # type: ignore
@@ -15,7 +15,7 @@ except ImportError:  # Fallback when imported as package
     from ..config import load_config_from_json
 
 try:
-    from flask import current_app
+    from flask import current_app  # type: ignore
 except Exception:  # pragma: no cover - fallback when Flask not available
     current_app = None  # type: ignore
 

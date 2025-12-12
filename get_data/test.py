@@ -3,7 +3,7 @@
 Onshape API Auth and Example Call
 """
 
-import requests
+import requests  # type: ignore
 import base64
 from typing import Dict, List, Optional
 

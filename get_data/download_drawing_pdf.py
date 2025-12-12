@@ -8,7 +8,7 @@ import time
 from pathlib import Path
 from typing import Dict, Tuple
 
-import requests
+import requests  # type: ignore
 
 
 class OnshapeDrawingDownloader:

@@ -1,7 +1,7 @@
 """Part model for the Part Management System."""
 
 from datetime import datetime, timezone
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy  # type: ignore
 from typing import Optional
 
 db = SQLAlchemy()
