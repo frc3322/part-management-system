@@ -6,6 +6,7 @@ import { renderReview } from "../tabs/review.js";
 import { renderCNC } from "../tabs/cnc.js";
 import { renderHandFab } from "../tabs/handFab.js";
 import { hideActionIconKey, showActionIconKey } from "../auth/auth.js";
+import { appState } from "../state/state.js";
 
 const MODAL_IDS = {
     review: "review-misc-modal",
@@ -149,11 +150,24 @@ async function handleReviewSubmit(event) {
     }
 
     try {
+        console.log(
+            "[handleReviewSubmit] Before onSubmit - review count:",
+            reviewContext.part ? "N/A" : "N/A"
+        );
         await reviewContext.onSubmit(payload);
+        console.log(
+            "[handleReviewSubmit] After onSubmit - review count:",
+            appState.parts.review.length
+        );
         closeReviewModal();
+        console.log(
+            "[handleReviewSubmit] Rendering tabs - review count:",
+            appState.parts.review.length
+        );
         renderReview();
         renderCNC();
         renderHandFab();
+        console.log("[handleReviewSubmit] Done rendering");
     } catch (error) {
         console.error("Failed to submit review details", error);
         alert("Failed to save review details. Please try again.");

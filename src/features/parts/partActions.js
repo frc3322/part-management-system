@@ -247,9 +247,17 @@ export async function markUncompleted(index, event) {
  */
 export async function approvePart(index, event) {
     const part = appState.parts.review[index];
+    console.log("[approvePart] Starting approval for part:", part.id, part.name);
+    console.log("[approvePart] Current review parts count:", appState.parts.review.length);
     openReviewDetails(part, async (payload) => {
+        console.log("[approvePart] onSubmit callback called with payload:", payload);
         const updatedPart = await apiApprovePart(part.id, payload || {});
+        console.log("[approvePart] API returned updated part:", updatedPart);
+        console.log("[approvePart] Updated part category:", updatedPart.category);
+        console.log("[approvePart] Before updatePartInState - review count:", appState.parts.review.length);
         updatePartInState(part.id, updatedPart);
+        console.log("[approvePart] After updatePartInState - review count:", appState.parts.review.length);
+        console.log("[approvePart] Review parts:", appState.parts.review.map(p => ({ id: p.id, name: p.name })));
     });
 }
 

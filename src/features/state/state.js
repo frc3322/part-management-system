@@ -385,14 +385,24 @@ export function removePartFromCategory(category, index) {
  * @param {Object} updatedPart - Updated part data
  */
 export function updatePartInState(partId, updatedPart) {
+    console.log("[updatePartInState] Called with partId:", partId, "updatedPart:", updatedPart);
+    console.log("[updatePartInState] Current state - review:", appState.parts.review.length, "cnc:", appState.parts.cnc.length, "hand:", appState.parts.hand.length);
+    
     // Find and update the part in all categories
     const nextParts = { ...appState.parts };
+    let foundInCategory = null;
+    
     for (const category of ["review", "cnc", "hand", "completed"]) {
         const parts = nextParts[category];
         const index = parts.findIndex((part) => part.id === partId);
         if (index !== -1) {
+            foundInCategory = category;
+            console.log("[updatePartInState] Found part in category:", category, "at index:", index);
+            console.log("[updatePartInState] Updated part category:", updatedPart.category, "current category:", category);
+            
             // If category changed, move to new category
             if (updatedPart.category === category) {
+                console.log("[updatePartInState] Category unchanged, updating in place");
                 const updatedList = [...parts];
                 updatedList[index] = normalizePart({
                     ...parts[index],
@@ -400,20 +410,33 @@ export function updatePartInState(partId, updatedPart) {
                 });
                 nextParts[category] = updatedList;
             } else {
+                console.log("[updatePartInState] Category changed, moving from", category, "to", updatedPart.category);
                 const updatedList = [...parts];
                 updatedList.splice(index, 1);
                 nextParts[category] = updatedList;
+                console.log("[updatePartInState] Removed from", category, "- new count:", nextParts[category].length);
+                
                 if (nextParts[updatedPart.category]) {
                     nextParts[updatedPart.category] = [
                         ...nextParts[updatedPart.category],
                         normalizePart(updatedPart),
                     ];
+                    console.log("[updatePartInState] Added to", updatedPart.category, "- new count:", nextParts[updatedPart.category].length);
+                } else {
+                    console.warn("[updatePartInState] Target category", updatedPart.category, "does not exist!");
                 }
             }
             break;
         }
     }
+    
+    if (!foundInCategory) {
+        console.warn("[updatePartInState] Part not found in any category!");
+    }
+    
+    console.log("[updatePartInState] Before setState - nextParts review:", nextParts.review.length);
     setState("parts", nextParts);
+    console.log("[updatePartInState] After setState - appState.parts.review:", appState.parts.review.length);
 }
 
 /**

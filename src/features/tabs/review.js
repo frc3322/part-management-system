@@ -161,8 +161,15 @@ export function createReviewRow(part, index) {
  * Render the review tab
  */
 export function renderReview() {
+    console.log("[renderReview] Called - review parts count:", appState.parts.review.length);
+    console.log("[renderReview] Review parts:", appState.parts.review.map(p => ({ id: p.id, name: p.name, category: p.category })));
+
     const tbody = document.getElementById("review-tbody");
     const emptyMsg = document.getElementById("review-empty");
+
+    console.log("[renderReview] DOM elements found - tbody:", !!tbody, "emptyMsg:", !!emptyMsg);
+    console.log("[renderReview] tbody children before:", tbody ? tbody.children.length : "N/A");
+    console.log("[renderReview] emptyMsg classes before:", emptyMsg ? emptyMsg.className : "N/A");
 
     // Show loading state if data is being loaded
     if (
@@ -177,15 +184,23 @@ export function renderReview() {
     }
 
     const filtered = filterParts(appState.parts.review, appState.searchQuery);
+    console.log("[renderReview] Filtered count:", filtered.length, "searchQuery:", appState.searchQuery);
 
     if (filtered.length === 0) {
+        console.log("[renderReview] Showing empty message");
         emptyMsg.classList.remove("hidden");
         emptyMsg.innerHTML = generateEmptyMessageReview();
+        tbody.innerHTML = "";
+        console.log("[renderReview] Cleared tbody, set empty message");
     } else {
+        console.log("[renderReview] Rendering", filtered.length, "parts");
         emptyMsg.classList.add("hidden");
         renderList(tbody, filtered, (part) => {
             const index = appState.parts.review.indexOf(part);
             return createReviewRow(part, index);
         });
     }
+
+    console.log("[renderReview] tbody children after:", tbody ? tbody.children.length : "N/A");
+    console.log("[renderReview] emptyMsg classes after:", emptyMsg ? emptyMsg.className : "N/A");
 }

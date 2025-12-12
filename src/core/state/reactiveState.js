@@ -38,6 +38,23 @@ function notify(path, value) {
             }
         });
     }
+    
+    if (path === "parts" && value && typeof value === "object") {
+        for (const category of ["review", "cnc", "hand", "completed"]) {
+            const nestedPath = `parts.${category}`;
+            const nestedSubscribers = subscribers.get(nestedPath);
+            if (nestedSubscribers && value[category] !== undefined) {
+                nestedSubscribers.forEach((callback) => {
+                    try {
+                        callback(value[category], stateRef);
+                    } catch (error) {
+                        console.error("Reactive subscriber failed:", error);
+                    }
+                });
+            }
+        }
+    }
+    
     const all = subscribers.get("*");
     if (all) {
         all.forEach((callback) => {
