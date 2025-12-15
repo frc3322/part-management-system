@@ -3,6 +3,45 @@
     border-radius: 15px;
     box-shadow: 8px 8px 16px #1a1d24, -8px -8px 16px #2c313c;
     border: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neumorphic-card:hover {
+    box-shadow: 12px 12px 24px #1a1d24, -12px -12px 24px #2c313c, 
+                0 0 20px rgba(99, 179, 237, 0.1);
+    transform: translateY(-2px) scale(1.01);
+    border-color: rgba(99, 179, 237, 0.15);
+}
+
+/* Split styles so parts lists and CNC cards can diverge without touching each other */
+.parts-list-surface {
+    background: #232730;
+    border-radius: 15px;
+    box-shadow: 8px 8px 16px #1a1d24, -8px -8px 16px #2c313c;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.parts-list-surface:hover {
+    box-shadow: 12px 12px 24px #1a1d24, -12px -12px 24px #2c313c,
+                0 0 20px rgba(99, 179, 237, 0.1);
+    transform: translateY(-2px) scale(1.01);
+    border-color: rgba(99, 179, 237, 0.15);
+}
+
+.cnc-card {
+    background: #232730;
+    border-radius: 15px;
+    box-shadow: 8px 8px 16px #1a1d24, -8px -8px 16px #2c313c;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cnc-card:hover {
+    box-shadow: 12px 12px 24px #1a1d24, -12px -12px 24px #2c313c,
+                0 0 20px rgba(99, 179, 237, 0.1);
+    transform: translateY(-1px) scale(1.001);
+    border-color: rgba(99, 179, 237, 0.15);
 }
 
 .neumorphic-btn {
@@ -78,5 +117,65 @@ td:has(.action-buttons) {
 .overflow-x-auto {
     scrollbar-width: thin;
     scrollbar-color: #4a5568 #1a1d24;
+}
+
+/* Allow hover shadows/glow to spill vertically for part tables (but don't affect CNC grid) */
+.overflow-x-auto:has(table:has(.part-row)) {
+    overflow-y: visible;
+    padding-block: 14px;
+}
+
+/* Part row styling for 3D card effect */
+.part-row {
+    background: transparent;
+    border-radius: 16px;
+    margin: 10px 0;
+    padding: 12px 8px;
+    box-shadow: none;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: visible;
+}
+
+
+.part-row:hover {
+    box-shadow: 12px 12px 24px #1a1d24, -12px -12px 24px #2c313c,
+        0 0 40px rgba(99, 179, 237, 0.25), 0 8px 32px rgba(0, 0, 0, 0.4);
+    border-color: rgba(99, 179, 237, 0.3);
+    z-index: 2;
+}
+
+
+.part-row td {
+    position: relative;
+    z-index: 1;
+    background: #232730;
+    transition: background 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.part-row:hover td {
+    background: linear-gradient(145deg, #252932, #232730);
+}
+
+.part-row td:first-child {
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+}
+
+.part-row td:last-child {
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+}
+
+/* Ensure tables with part rows have proper spacing */
+table:has(.part-row) {
+    border-collapse: separate;
+    border-spacing: 0 6px;
+}
+
+table:has(.part-row) tbody {
+    display: table-row-group;
 }
 

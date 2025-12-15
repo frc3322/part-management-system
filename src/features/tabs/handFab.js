@@ -61,8 +61,7 @@ export function createHandFabRow(part, index) {
                             </div>`;
 
     const row = document.createElement("tr");
-    row.className =
-        "border-b border-gray-800 hover:bg-gray-800 transition duration-200";
+    row.className = "part-row";
 
     row.innerHTML = `
         <td class="p-3">

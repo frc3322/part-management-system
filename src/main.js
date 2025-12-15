@@ -125,7 +125,7 @@ function applyTooltip(element) {
 function triggerNeumorphicAnimations() {
     // Animate all neumorphic elements at once (shadows/highlights only)
     document
-        .querySelectorAll(".neumorphic-card")
+        .querySelectorAll(".neumorphic-card, .parts-list-surface, .cnc-card")
         .forEach((card) => card.classList.add("animate-pop-up"));
 
     document

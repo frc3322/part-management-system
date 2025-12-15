@@ -66,8 +66,7 @@ function createCompletedCard(part, index) {
 export function createCompletedRow(part, index) {
     const isCNC = part.type === "cnc";
     const row = document.createElement("tr");
-    row.className =
-        "border-b border-gray-800 hover:bg-gray-800 transition duration-200 opacity-75 hover:opacity-100";
+    row.className = "part-row opacity-75 hover:opacity-100";
 
     row.innerHTML = `
         <td class="p-3">

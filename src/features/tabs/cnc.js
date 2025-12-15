@@ -157,7 +157,7 @@ function renderPartCard(part, index, container) {
     const showInfoEditButtons = !appState.isMobile;
     const card = document.createElement("div");
     card.className =
-        "neumorphic-card p-5 flex flex-col gap-3 transform transition hover:scale-[1.02] duration-300";
+        "cnc-card p-5 flex flex-col gap-3 transform transition hover:scale-[1.02] duration-300";
 
     const fileExt = getFileExtension(part.file);
 

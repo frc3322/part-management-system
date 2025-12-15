@@ -67,8 +67,7 @@ export function createReviewRow(part, index) {
     const fileHTML = generateReviewFileHTML(part);
 
     const row = createElement("tr", {
-        className:
-            "border-b border-gray-800 hover:bg-gray-800 transition duration-200",
+        className: "part-row",
     });
 
     const typeCell = createElement("td", {
