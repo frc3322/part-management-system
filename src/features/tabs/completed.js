@@ -2,7 +2,10 @@
 // Handles the completed tab display and functionality
 
 import { appState } from "../state/state.js";
-import { filterParts } from "../../core/utils/helpers.js";
+import {
+    filterParts,
+    updateScrollbarEdgeEffect,
+} from "../../core/utils/helpers.js";
 
 /**
  * Generate empty state message for completed tab
@@ -179,4 +182,8 @@ export function renderCompleted() {
         const row = createCompletedRow(part, index);
         tbody.appendChild(row);
     }
+
+    // Update scrollbar edge effect
+    const completedContent = document.getElementById("content-completed");
+    updateScrollbarEdgeEffect(completedContent);
 }

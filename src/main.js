@@ -108,6 +108,7 @@ import {
     refreshDrawing,
 } from "./features/parts/drawingViewer.js";
 import { showPartInfo } from "./features/modals/infoModals.js";
+import { updateScrollbarEdgeEffect } from "./core/utils/helpers.js";
 import {
     initEventDelegation,
     registerActions,
@@ -311,6 +312,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         scheduleRefreshNotice();
     }
 
+    // Add scroll and resize listeners for scrollbar effects
+    window.addEventListener("scroll", updateAllScrollbarEdgeEffects);
+    window.addEventListener("resize", updateAllScrollbarEdgeEffects);
+
     // Trigger neumorphic pop-up animations after initialization
     setTimeout(() => {
         triggerNeumorphicAnimations();
@@ -324,6 +329,7 @@ globalThis.addEventListener("authenticated", () => {
     configureMobileUI();
     switchTab(appState.currentTab);
     scheduleRefreshNotice();
+    updateAllScrollbarEdgeEffects();
 });
 
 globalThis.addEventListener("resize", () => {
@@ -350,6 +356,9 @@ globalThis.addEventListener("resize", () => {
     if (appState.isAuthenticated && tabChanged) {
         switchTab(appState.currentTab);
     }
+
+    // Update scrollbar edge effects on resize
+    updateAllScrollbarEdgeEffects();
 });
 
 const actionExports = {
@@ -393,6 +402,27 @@ const actionExports = {
     handleAuthKeyup,
     downloadStepFile,
 };
+
+/**
+ * Update scrollbar edge effects for all tab content areas
+ */
+function updateAllScrollbarEdgeEffects() {
+    const tabContents = ["content-review", "content-hand", "content-completed"];
+
+    // Clean up orphaned overlays
+    const allOverlays = document.querySelectorAll(".scrollbar-blur-overlay");
+    allOverlays.forEach((overlay) => {
+        const elementId = overlay.parentElement?.id;
+        if (!elementId || !tabContents.includes(elementId)) {
+            overlay.remove();
+        }
+    });
+
+    tabContents.forEach((contentId) => {
+        const element = document.getElementById(contentId);
+        updateScrollbarEdgeEffect(element);
+    });
+}
 
 registerActions(actionExports);
 initEventDelegation();

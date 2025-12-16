@@ -2,7 +2,10 @@
 // Handles the review tab display and functionality
 
 import { appState } from "../state/state.js";
-import { filterParts } from "../../core/utils/helpers.js";
+import {
+    filterParts,
+    updateScrollbarEdgeEffect,
+} from "../../core/utils/helpers.js";
 import { createElement, renderList } from "../../core/dom/templateHelpers.js";
 
 /**
@@ -160,15 +163,36 @@ export function createReviewRow(part, index) {
  * Render the review tab
  */
 export function renderReview() {
-    console.log("[renderReview] Called - review parts count:", appState.parts.review.length);
-    console.log("[renderReview] Review parts:", appState.parts.review.map(p => ({ id: p.id, name: p.name, category: p.category })));
+    console.log(
+        "[renderReview] Called - review parts count:",
+        appState.parts.review.length
+    );
+    console.log(
+        "[renderReview] Review parts:",
+        appState.parts.review.map((p) => ({
+            id: p.id,
+            name: p.name,
+            category: p.category,
+        }))
+    );
 
     const tbody = document.getElementById("review-tbody");
     const emptyMsg = document.getElementById("review-empty");
 
-    console.log("[renderReview] DOM elements found - tbody:", !!tbody, "emptyMsg:", !!emptyMsg);
-    console.log("[renderReview] tbody children before:", tbody ? tbody.children.length : "N/A");
-    console.log("[renderReview] emptyMsg classes before:", emptyMsg ? emptyMsg.className : "N/A");
+    console.log(
+        "[renderReview] DOM elements found - tbody:",
+        !!tbody,
+        "emptyMsg:",
+        !!emptyMsg
+    );
+    console.log(
+        "[renderReview] tbody children before:",
+        tbody ? tbody.children.length : "N/A"
+    );
+    console.log(
+        "[renderReview] emptyMsg classes before:",
+        emptyMsg ? emptyMsg.className : "N/A"
+    );
 
     // Show loading state if data is being loaded
     if (
@@ -183,7 +207,12 @@ export function renderReview() {
     }
 
     const filtered = filterParts(appState.parts.review, appState.searchQuery);
-    console.log("[renderReview] Filtered count:", filtered.length, "searchQuery:", appState.searchQuery);
+    console.log(
+        "[renderReview] Filtered count:",
+        filtered.length,
+        "searchQuery:",
+        appState.searchQuery
+    );
 
     if (filtered.length === 0) {
         console.log("[renderReview] Showing empty message");
@@ -200,6 +229,16 @@ export function renderReview() {
         });
     }
 
-    console.log("[renderReview] tbody children after:", tbody ? tbody.children.length : "N/A");
-    console.log("[renderReview] emptyMsg classes after:", emptyMsg ? emptyMsg.className : "N/A");
+    console.log(
+        "[renderReview] tbody children after:",
+        tbody ? tbody.children.length : "N/A"
+    );
+    console.log(
+        "[renderReview] emptyMsg classes after:",
+        emptyMsg ? emptyMsg.className : "N/A"
+    );
+
+    // Update scrollbar edge effect
+    const reviewContent = document.getElementById("content-review");
+    updateScrollbarEdgeEffect(reviewContent);
 }

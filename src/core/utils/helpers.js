@@ -156,3 +156,74 @@ export function getInitials(name) {
         .toUpperCase()
         .slice(0, 2);
 }
+
+/**
+ * Check if an element has a horizontal scrollbar and update scrollbar edge effect.
+ * @param {HTMLElement} element - The element to check for scrollbar
+ */
+export function updateScrollbarEdgeEffect(element) {
+    if (!element) return;
+
+    element.classList.add("scrollbar-edge");
+
+    let overlay = element._scrollbarEdgeOverlay;
+    if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.className = "scrollbar-edge-overlay";
+        document.body.appendChild(overlay);
+        element._scrollbarEdgeOverlay = overlay;
+    }
+
+    // Function to update overlay state and position
+    const update = () => {
+        if (!element || !overlay) return;
+
+        const hasScrollbar = element.scrollWidth > element.clientWidth;
+        element.classList.toggle("scrollbar-visible", hasScrollbar);
+
+        if (!hasScrollbar) {
+            overlay.classList.remove("is-visible");
+            overlay.style.display = "none";
+            overlay.style.height = "0";
+            return;
+        }
+
+        // Set display first, then position, then show with opacity
+        overlay.style.display = "block";
+
+        const rect = element.getBoundingClientRect();
+        const overlayWidth = 90; // Matches CSS width
+
+        overlay.style.top = `${rect.top}px`;
+        overlay.style.left = `${rect.right - overlayWidth}px`;
+        overlay.style.height = `${rect.height}px`;
+
+        // Force reflow to ensure positioning is applied before opacity transition
+        void overlay.offsetHeight;
+
+        const isScrolledToEnd =
+            Math.ceil(element.scrollLeft + element.clientWidth) >=
+            element.scrollWidth - 2;
+
+        if (!isScrolledToEnd) {
+            overlay.classList.add("is-visible");
+        } else {
+            overlay.classList.remove("is-visible");
+        }
+    };
+
+    // Attach listeners once
+    if (!element._scrollbarEdgeBound) {
+        element._scrollbarEdgeBound = true;
+        element.addEventListener("scroll", update, { passive: true });
+        window.addEventListener("resize", update, { passive: true });
+    }
+
+    // Run immediately (both sync and async to ensure it appears on init)
+    update();
+    requestAnimationFrame(() => {
+        update();
+        // Double-check after a brief delay to catch late-rendering content
+        setTimeout(() => update(), 100);
+    });
+}

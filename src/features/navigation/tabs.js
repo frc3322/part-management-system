@@ -18,6 +18,7 @@ const loadRenderCNC = async () => {
 import { renderCompleted } from "../tabs/completed.js";
 import { renderLeaderboard, loadLeaderboard } from "../tabs/leaderboard.js";
 import { saveCurrentTab } from "../state/persistence.js";
+import { updateScrollbarEdgeEffect } from "../../core/utils/helpers.js";
 import {
     getState,
     subscribe,
@@ -189,6 +190,10 @@ export async function switchTab(tab) {
             // Still render with current data if fetch fails
         }
     }
+
+    // Update scrollbar edge effect for current tab after switching
+    const currentContent = document.getElementById(`content-${targetTab}`);
+    updateScrollbarEdgeEffect(currentContent);
 }
 
 /**

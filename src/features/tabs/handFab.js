@@ -2,7 +2,11 @@
 // Handles the hand fabrication tab display and functionality
 
 import { appState } from "../state/state.js";
-import { filterParts, getStatusClass } from "../../core/utils/helpers.js";
+import {
+    filterParts,
+    getStatusClass,
+    updateScrollbarEdgeEffect,
+} from "../../core/utils/helpers.js";
 
 /**
  * Calculate days claimed HTML for a part
@@ -281,4 +285,8 @@ export function renderHandFab() {
         const row = createHandFabRow(part, index);
         tbody.appendChild(row);
     }
+
+    // Update scrollbar edge effect
+    const handContent = document.getElementById("content-hand");
+    updateScrollbarEdgeEffect(handContent);
 }
