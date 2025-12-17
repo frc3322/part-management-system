@@ -1,5 +1,5 @@
 .neumorphic-card {
-    background: #232730;
+    background: var(--surface-primary);
     border-radius: 15px;
     box-shadow: 8px 8px 16px #1a1d24, -8px -8px 16px #2c313c;
     border: 1px solid rgba(255,255,255,0.05);
@@ -15,7 +15,7 @@
 
 /* Split styles so parts lists and CNC cards can diverge without touching each other */
 .parts-list-surface {
-    background: #232730;
+    background: var(--surface-primary);
     border-radius: 15px;
     box-shadow: 8px 8px 16px #1a1d24, -8px -8px 16px #2c313c;
     border: 1px solid rgba(255,255,255,0.05);
@@ -30,7 +30,7 @@
 }
 
 .cnc-card {
-    background: #232730;
+    background: var(--surface-primary);
     border-radius: 15px;
     box-shadow: 8px 8px 16px #1a1d24, -8px -8px 16px #2c313c;
     border: 1px solid rgba(255,255,255,0.05);
@@ -44,8 +44,26 @@
     border-color: rgba(99, 179, 237, 0.15);
 }
 
+.tab-btn {
+    background: var(--surface-primary);
+    border-radius: 15px;
+    box-shadow: 5px 5px 10px #1a1c24, -5px -5px 10px #2e3240;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    box-shadow: 7px 7px 14px #1a1c24, -7px -7px 14px #2e3240;
+    transform: translateY(-1px);
+}
+
+.tab-btn:active {
+    box-shadow: inset 5px 5px 10px #1a1c24, inset -5px -5px 10px #2e3240;
+    transform: translateY(1px);
+}
+
 .neumorphic-btn {
-    background: linear-gradient(145deg, #262a33, #1f232b);
+    background: var(--bg-primary);
+    border-radius: 6px;
     box-shadow: 5px 5px 10px #1a1c24, -5px -5px 10px #2e3240;
     transition: all 0.2s ease;
 }
@@ -61,7 +79,7 @@
 }
 
 .neumorphic-input {
-    background: #232730;
+    background: var(--surface-primary);
     box-shadow: inset 3px 3px 6px #1a1d24, inset -3px -3px 6px #2c313c;
     border: none;
     color: #cbd5e0;
@@ -181,7 +199,7 @@ td:has(.action-buttons) {
 .part-row td {
     position: relative;
     z-index: 1;
-    background: #232730;
+    background: var(--surface-primary);
     transition: background 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

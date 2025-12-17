@@ -1,5 +1,5 @@
 .mobile-tab-btn {
-    background: #1f232b;
+    background: var(--surface-primary);
     color: #cbd5e0;
     padding: 10px 12px;
     border-radius: 12px;
