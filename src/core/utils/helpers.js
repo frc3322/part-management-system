@@ -164,6 +164,11 @@ export function getInitials(name) {
 export function updateScrollbarEdgeEffect(element) {
     if (!element) return;
 
+    // Skip scrollbar edge effect for leaderboard
+    if (element.id === "content-leaderboard") {
+        return;
+    }
+
     element.classList.add("scrollbar-edge");
 
     let overlay = element._scrollbarEdgeOverlay;
