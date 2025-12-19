@@ -64,15 +64,15 @@
 
 .animate-pop-up {
     will-change: box-shadow;
-    animation: popUp 1s ease-in-out;
+    animation: popUp 1s ease-in-out forwards;
 }
 
 @keyframes popUp {
     0% {
-        box-shadow: 0 0 0 rgba(26, 29, 36, 0), 0 0 0 rgba(44, 49, 60, 0);
+        box-shadow: 0 0 0 rgba(26, 28, 36, 0), 0 0 0 rgba(46, 50, 64, 0);
     }
     100% {
-        box-shadow: 8px 8px 16px #1a1d24, -8px -8px 16px #2c313c;
+        box-shadow: 5px 5px 10px #1a1c24, -5px -5px 10px #2e3240;
     }
 }
 
